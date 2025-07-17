@@ -188,6 +188,7 @@
 
 .card-content {
   text-align: center;
+  margin: 10px;
 }
 
 .hospital-name {
@@ -214,7 +215,7 @@
   color: #16a34a;
   font-size: 14px;
   font-weight: 500;
-  margin: 0;
+  margin: 10px;
 }
 
 .time {
