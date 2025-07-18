@@ -1,0 +1,621 @@
+/* Login Page Styles - Clean Single Column Version */
+* {
+  box-sizing: border-box;
+}
+
+body,
+html {
+  margin: 0;
+  padding: 0;
+  font-family: "Inter", sans-serif;
+  height: 100%;
+  overflow-x: hidden;
+}
+
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  padding: 0;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.login-left-section {
+  width: 50%;
+  background: linear-gradient(135deg, #a3ebb1 34%, #ffff 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.login-right-section {
+  width: 50%;
+  background: #f5f5f5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.hospital-image {
+  max-width: 100%;
+  width: auto;
+  height: auto;
+  max-height: 400px;
+  margin-bottom: 30px;
+}
+
+.hospital-text {
+  text-align: center;
+  color: #000000;
+}
+
+.hospital-text h3 {
+  font-size: 24px;
+  font-weight: 600;
+  color: #53ab5b;
+  margin: 0 0 10px 0;
+  font-style: italic;
+}
+
+.login-container {
+  background: #fff;
+  box-shadow: 0 8px 32px rgba(0, 188, 212, 0.15);
+  border-radius: 32px;
+  overflow: hidden;
+  max-width: 420px;
+  width: 100%;
+  min-width: 320px;
+  padding: 32px 24px;
+  box-sizing: border-box;
+  animation: fadeIn 0.6s ease-out;
+  margin: 0;
+  flex-shrink: 0;
+}
+/* Extra large screens */
+@media (min-width: 1200px) {
+  .login-container {
+    max-width: 400px;
+    padding: 40px 32px;
+    border-radius: 36px;
+  }
+
+  .login-left-section {
+    position: relative;
+  }
+
+  .footer {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 0;
+    max-width: 400px;
+  }
+} /* Medium screens */
+@media (min-width: 769px) and (max-width: 1199px) {
+  .login-container {
+    max-width: 380px;
+    padding: 36px 28px;
+  }
+
+  .login-left-section {
+    position: relative;
+  }
+
+  .footer {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 0;
+    max-width: 380px;
+  }
+}
+
+/* Small landscape phones and tablets */
+@media (max-width: 768px) and (orientation: landscape) {
+  .login-page {
+    flex-direction: row;
+    padding: 10px;
+  }
+
+  .login-left-section {
+    width: 50%;
+    position: relative;
+  }
+
+  .login-right-section {
+    width: 50%;
+    order: 0;
+  }
+
+  .login-container {
+    max-width: 400px;
+    padding: 20px 24px;
+  }
+
+  .footer {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 0;
+    font-size: 14px;
+    padding: 10px 15px;
+    max-width: 400px;
+  }
+
+  .hospital-image {
+    max-height: 200px;
+  }
+
+  .hospital-text h3 {
+    font-size: 16px;
+  }
+}
+
+.login-form-section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.login-header {
+  margin-bottom: 32px;
+  text-align: center;
+}
+
+.brand-title {
+  font-size: 80px;
+  font-weight: 700;
+  color: #53ab5b;
+  margin: 0;
+  text-align: center;
+  font-weight: bold;
+}
+
+.welcome-message {
+  margin-bottom: 32px;
+  text-align: center;
+}
+
+.welcome-message h2 {
+  font-size: 32px;
+  font-weight: 600;
+  color: #000000;
+  margin: 0 0 8px 0;
+  line-height: 1.2;
+}
+
+.welcome-message p {
+  font-size: 16px;
+  color: #000000;
+  margin: 0;
+  font-style: italic;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.input-group {
+  width: 100%;
+}
+
+.form-input {
+  width: 100%;
+  padding: 16px 20px;
+  font-size: 16px;
+  border-radius: 12px;
+  border: 2px solid #e0e0e0;
+  background: #f9f9f9;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+  font-family: "Inter", sans-serif;
+}
+
+.form-input:focus {
+  outline: none;
+  background: white;
+  border-color: #00bcd4;
+  box-shadow: 0 4px 20px rgba(0, 188, 212, 0.15);
+  transform: translateY(-1px);
+}
+
+.form-input::placeholder {
+  color: #999;
+  font-size: 16px;
+}
+
+.password-input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.password-input-wrapper .form-input {
+  padding-right: 50px;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #666;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+.password-toggle:hover {
+  color: #00bcd4;
+  background: rgba(0, 188, 212, 0.1);
+}
+
+.forgot-password {
+  text-align: right;
+  margin-top: -10px;
+}
+
+.forgot-link {
+  background: none;
+  border: none;
+  color: #53ab5b;
+  font-weight: bold;
+  text-decoration: none;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.3s ease;
+  font-family: "Inter", sans-serif;
+}
+
+.forgot-link:hover {
+  color: #53ab5b;
+  text-decoration: underline;
+}
+
+.signin-button {
+  background: linear-gradient(135deg, #00bcd4 0%, #26c6da 100%);
+  color: white;
+  border: none;
+  padding: 16px 0;
+  border-radius: 12px;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 8px;
+  width: 100%;
+  box-shadow: 0 4px 15px rgba(0, 188, 212, 0.3);
+  font-family: "Inter", sans-serif;
+}
+
+.signin-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 188, 212, 0.4);
+}
+
+.signin-button:active:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.signin-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: 0 4px 15px rgba(0, 188, 212, 0.2);
+}
+
+.create-account {
+  text-align: center;
+  margin-top: 20px;
+  color: #000000;
+  font-size: 14px;
+}
+
+.create-link {
+  background: none;
+  border: none;
+  color: #53ab5b;
+  text-decoration: none;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  font-size: inherit;
+  transition: color 0.3s ease;
+  font-family: "Inter", sans-serif;
+}
+
+.create-link:hover {
+  color: #53ab5b;
+  text-decoration: underline;
+}
+
+.error-message {
+  color: #e53935;
+  background: #fff3f3;
+  border: 1px solid #ffcdd2;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 16px;
+  font-size: 14px;
+  text-align: left;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.footer {
+  margin: 20px auto 0 auto;
+  text-align: center;
+  color: rgba(0, 0, 0, 0.8);
+  font-size: 12px;
+  font-family: "Inter", sans-serif;
+  padding: 20px 20px;
+  font-weight: bold;
+  flex-shrink: 0;
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: auto;
+  max-width: 420px;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.footer p {
+  margin: 0;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .login-page {
+    flex-direction: column;
+    padding: 15px;
+  }
+
+  .login-left-section {
+    width: 100%;
+    min-height: auto;
+    padding: 20px 15px;
+  }
+
+  .login-right-section {
+    width: 100%;
+    padding: 20px 15px;
+    order: -1;
+  }
+
+  .hospital-image {
+    max-height: 200px;
+    margin-bottom: 15px;
+  }
+
+  .hospital-text h3 {
+    font-size: 18px;
+  }
+
+  .login-container {
+    padding: 24px 20px;
+    border-radius: 20px;
+    max-width: 100%;
+    width: 100%;
+    min-width: 0;
+    margin: 0 auto;
+  }
+
+  .brand-title {
+    font-size: 48px;
+  }
+
+  .welcome-message h2 {
+    font-size: 24px;
+  }
+
+  .welcome-message p {
+    font-size: 14px;
+  }
+
+  .form-input {
+    padding: 14px 16px;
+    font-size: 16px; /* Prevent zoom on iOS */
+  }
+
+  .signin-button {
+    padding: 14px 0;
+    font-size: 16px;
+  }
+
+  .footer {
+    position: relative;
+    bottom: auto;
+    left: auto;
+    transform: none;
+    margin: 10px auto 0 auto;
+    font-size: 15px;
+    padding: 12px 15px;
+    max-width: 100%;
+    width: calc(100% - 30px);
+  }
+}
+
+@media (max-width: 480px) {
+  .login-page {
+    flex-direction: column;
+    padding: 10px;
+  }
+
+  .login-left-section {
+    width: 100%;
+    padding: 15px 10px;
+  }
+
+  .login-right-section {
+    width: 100%;
+    padding: 15px 10px;
+    order: -1;
+  }
+
+  .hospital-image {
+    max-height: 150px;
+    margin-bottom: 10px;
+  }
+
+  .hospital-text h3 {
+    font-size: 16px;
+  }
+
+  .login-container {
+    padding: 20px 16px;
+    border-radius: 16px;
+    min-width: 0;
+    max-width: 100%;
+    width: 100%;
+  }
+
+  .brand-title {
+    font-size: 36px;
+    margin-bottom: 16px;
+  }
+
+  .welcome-message h2 {
+    font-size: 20px;
+  }
+
+  .welcome-message p {
+    font-size: 13px;
+  }
+
+  .form-input {
+    padding: 12px 14px;
+    font-size: 16px;
+  }
+
+  .signin-button {
+    padding: 12px 0;
+    font-size: 16px;
+  }
+
+  .footer {
+    position: relative;
+    bottom: auto;
+    left: auto;
+    transform: none;
+    margin: 8px auto 0 auto;
+    font-size: 14px;
+    padding: 10px 12px;
+    max-width: 100%;
+    width: calc(100% - 20px);
+  }
+}
+
+/* Focus states for accessibility */
+.form-input:focus,
+.signin-button:focus,
+.password-toggle:focus,
+.forgot-link:focus,
+.create-link:focus {
+  outline: 2px solid #00bcd4;
+  outline-offset: 2px;
+}
+
+/* Loading state */
+.loading {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+/* Very short screens */
+@media (max-height: 600px) {
+  .login-page {
+    flex-direction: row;
+  }
+
+  .login-left-section {
+    padding: 20px;
+  }
+
+  .login-right-section {
+    padding: 20px;
+  }
+
+  .login-container {
+    margin: 0;
+  }
+
+  .footer {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 0;
+    font-size: 14px;
+    padding: 8px 12px;
+  }
+
+  .brand-title {
+    font-size: 42px;
+    margin-bottom: 16px;
+  }
+
+  .welcome-message {
+    margin-bottom: 20px;
+  }
+
+  .hospital-image {
+    max-height: 250px;
+  }
+}
+
+/* Extra small screens */
+@media (max-width: 320px) {
+  .footer {
+    position: relative;
+    bottom: auto;
+    left: auto;
+    transform: none;
+    margin: 6px auto 0 auto;
+    font-size: 13px;
+    padding: 8px 10px;
+    width: calc(100% - 20px);
+    word-wrap: break-word;
+  }
+}
