@@ -58,7 +58,7 @@ html {
 
 .hospital-text {
   text-align: center;
-  color: #000000;
+  color: #53ab5b;
 }
 
 .hospital-text h3 {
@@ -218,6 +218,7 @@ html {
   }
 
   .hospital-text h3 {
+    color: #53ab5b;
     font-size: 14px;
   }
 }
@@ -501,6 +502,7 @@ html {
   }
 
   .hospital-text h3 {
+    color: #53ab5b;
     font-size: 16px;
     margin-bottom: 5px;
   }
@@ -594,6 +596,7 @@ html {
   }
 
   .hospital-text h3 {
+    color: #53ab5b;
     font-size: 14px;
     margin-bottom: 3px;
   }
@@ -789,6 +792,7 @@ html {
   }
 
   .hospital-text h3 {
+    color: #53ab5b;
     font-size: 12px;
   }
 
@@ -830,6 +834,7 @@ html {
   }
 
   .hospital-text h3 {
+    color: #53ab5b;
     font-size: 12px;
     margin-bottom: 2px;
   }

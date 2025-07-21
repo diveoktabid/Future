@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import Dashboard from "./Dashboard";
-import Login from "./Login";
+import Dashboard from "./dashboard/Dashboard";
+import Login from "./login/Login";
+import Register from "./register/Register";
 import { useLocalStorage } from "./hooks/useLocalStorage";
 import "./styles/globals.css";
 import "./App.css";
@@ -73,22 +74,41 @@ const LoadingScreen = () => (
 );
 
 // Login component (simplified for demo)
-const LoginScreen = ({ onLogin }) => {
-  return <Login onLogin={onLogin} />;
+const LoginScreen = ({ onLogin, onCreateAccount }) => {
+  return <Login onLogin={onLogin} onCreateAccount={onCreateAccount} />;
+};
+
+// Register component
+const RegisterScreen = ({ onBackToLogin }) => {
+  return <Register onBackToLogin={onBackToLogin} />;
 };
 
 // Main App Component
 const App = () => {
   const { user, isLoading, login, logout } = useAuth();
+  const [currentView, setCurrentView] = useState("login"); // "login" or "register"
+
+  const handleCreateAccount = () => {
+    setCurrentView("register");
+  };
+
+  const handleBackToLogin = () => {
+    setCurrentView("login");
+  };
 
   // Show loading screen
   if (isLoading) {
     return <LoadingScreen />;
   }
 
-  // Show login if not authenticated
+  // Show login or register if not authenticated
   if (!user) {
-    return <LoginScreen onLogin={login} />;
+    if (currentView === "register") {
+      return <RegisterScreen onBackToLogin={handleBackToLogin} />;
+    }
+    return (
+      <LoginScreen onLogin={login} onCreateAccount={handleCreateAccount} />
+    );
   }
 
   // Show dashboard if authenticated

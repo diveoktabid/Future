@@ -26,7 +26,7 @@ const authService = {
   },
 };
 
-const Login = ({ onLogin }) => {
+const Login = ({ onLogin, onCreateAccount }) => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -190,16 +190,18 @@ const Login = ({ onLogin }) => {
 
               <div className="create-account">
                 <span>Don't have an account? </span>
-                <button type="button" className="create-link">
+                <button
+                  type="button"
+                  className="create-link"
+                  onClick={onCreateAccount}>
                   Create your account
                 </button>
               </div>
-
-              <div className="footer">
-                <p>© 2025, Bartech Utama Mandiri. All Rights Reserved.</p>
-              </div>
             </div>
           </div>
+        </div>
+        <div className="footer">
+          <p>© 2025, Bartech Utama Mandiri. All Rights Reserved.</p>
         </div>
       </div>
 
