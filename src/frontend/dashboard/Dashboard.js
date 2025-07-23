@@ -308,8 +308,8 @@ const Dashboard = ({ onLogout }) => {
             </div>
           </div>
 
-          {/* Operation Lights */}
-          <div className="monitoring-card">
+          {/* Operation Lights && Writing Table */}
+          <div className="monitoring-card multiple-status">
             <div className="monitoring-header">Status Lampu Operasi</div>
             <div
               className={`status-badge ${
@@ -317,10 +317,6 @@ const Dashboard = ({ onLogout }) => {
               }`}>
               {monitoringData.status_lampu_op === "ON" ? "Hidup" : "Mati"}
             </div>
-          </div>
-
-          {/* Writing Table */}
-          <div className="monitoring-card">
             <div className="monitoring-header">Status Writing Table</div>
             <div
               className={`status-badge ${
