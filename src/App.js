@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import Dashboard from "./dashboard/Dashboard";
-import Login from "./login/Login";
-import Register from "./register/Register";
+import Dashboard from "./frontend/dashboard/Dashboard";
+import Login from "./frontend/login/Login";
+import Register from "./frontend/register/Register";
+import ForgotPassword from "./frontend/ForgotPasswordComponent/ForgotPassword";
 import { useLocalStorage } from "./hooks/useLocalStorage";
 import "./styles/globals.css";
 import "./App.css";
@@ -74,8 +75,14 @@ const LoadingScreen = () => (
 );
 
 // Login component (simplified for demo)
-const LoginScreen = ({ onLogin, onCreateAccount }) => {
-  return <Login onLogin={onLogin} onCreateAccount={onCreateAccount} />;
+const LoginScreen = ({ onLogin, onCreateAccount, onForgotPassword }) => {
+  return (
+    <Login
+      onLogin={onLogin}
+      onCreateAccount={onCreateAccount}
+      onForgotPassword={onForgotPassword}
+    />
+  );
 };
 
 // Register component
@@ -83,10 +90,15 @@ const RegisterScreen = ({ onBackToLogin }) => {
   return <Register onBackToLogin={onBackToLogin} />;
 };
 
+// Forgot Password component
+const ForgotPasswordScreen = ({ onBackToLogin }) => {
+  return <ForgotPassword onBackToLogin={onBackToLogin} />;
+};
+
 // Main App Component
 const App = () => {
   const { user, isLoading, login, logout } = useAuth();
-  const [currentView, setCurrentView] = useState("login"); // "login" or "register"
+  const [currentView, setCurrentView] = useState("login"); // "login", "register", or "forgot-password"
 
   const handleCreateAccount = () => {
     setCurrentView("register");
@@ -94,6 +106,10 @@ const App = () => {
 
   const handleBackToLogin = () => {
     setCurrentView("login");
+  };
+
+  const handleForgotPassword = () => {
+    setCurrentView("forgot-password");
   };
 
   // Show loading screen
@@ -106,8 +122,15 @@ const App = () => {
     if (currentView === "register") {
       return <RegisterScreen onBackToLogin={handleBackToLogin} />;
     }
+    if (currentView === "forgot-password") {
+      return <ForgotPasswordScreen onBackToLogin={handleBackToLogin} />;
+    }
     return (
-      <LoginScreen onLogin={login} onCreateAccount={handleCreateAccount} />
+      <LoginScreen
+        onLogin={login}
+        onCreateAccount={handleCreateAccount}
+        onForgotPassword={handleForgotPassword}
+      />
     );
   }
 

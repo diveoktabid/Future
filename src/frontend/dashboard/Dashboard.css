@@ -192,6 +192,25 @@ body {
   margin: 0 auto;
 }
 
+/* Loading and No Data States */
+.loading-container,
+.no-data-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  width: 100%;
+  color: #6b7280;
+  font-size: 1.1rem;
+  font-weight: 500;
+  grid-column: 1 / -1;
+}
+
+.loading-container p,
+.no-data-container p {
+  margin: 0;
+}
+
 .hospital-card {
   background: white;
   border-radius: 0.75rem;
@@ -231,12 +250,18 @@ body {
   gap: 1rem;
 }
 
+.installation-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
 .installation-date,
+.installation-time,
 .iot-status {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  column-span: all;
   text-align: center;
 }
 
@@ -506,6 +531,21 @@ body {
   font-size: 2rem;
   font-weight: bold;
   color: #1f2937;
+}
+
+/* Monitoring Footer */
+.monitoring-footer {
+  margin-top: 2rem;
+  padding: 1rem;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 0.5rem;
+}
+
+.last-update {
+  color: #6b7280;
+  font-size: 0.9rem;
+  margin: 0;
 }
 
 /* Responsive Design for Detail View */

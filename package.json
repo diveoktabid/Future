@@ -27,6 +27,9 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
+    "dev": "concurrently \"npm start\" \"cd src/backend && npm run dev\"",
+    "dev:frontend": "react-scripts start",
+    "dev:backend": "cd src/backend && npm run dev",
     "lint": "eslint src/",
     "lint:fix": "eslint src/ --fix",
     "format": "prettier --write src/"
@@ -53,8 +56,8 @@
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^14.4.3",
+    "concurrently": "^9.2.0",
     "eslint": "^8.36.0",
     "prettier": "^2.8.0"
-  },
-  "proxy": "http://localhost:3001"
+  }
 }

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./Register.css";
+import authService from "../services/authService";
 
 const Register = ({ onBackToLogin }) => {
   const [formData, setFormData] = useState({
@@ -64,16 +65,28 @@ const Register = ({ onBackToLogin }) => {
     setError("");
 
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      // Call backend API untuk register
+      const result = await authService.register({
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+        phoneNumber: formData.phoneNumber,
+        password: formData.password,
+      });
 
-      // Simulate successful registration
-      alert(
-        "Account created successfully! Please login with your credentials."
-      );
-      onBackToLogin();
+      if (result.success) {
+        alert(
+          "Account created successfully! Please login with your credentials."
+        );
+        onBackToLogin();
+      } else {
+        setError(
+          result.message || "Failed to create account. Please try again."
+        );
+      }
     } catch (err) {
-      setError("Failed to create account. Please try again.");
+      console.error("Registration error:", err);
+      setError("Network error. Please check your connection and try again.");
     } finally {
       setIsLoading(false);
     }

@@ -1,35 +1,12 @@
 import React, { useState } from "react";
 import "./Login.css";
+import authService from "../services/authService";
 
-// Mock auth service for demo purposes
-const authService = {
-  login: async (email, password) => {
-    // Simulate API call delay
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-
-    // Demo credentials validation
-    const validCredentials = [
-      { email: "admin@bartech.id", password: "admin123", role: "admin" },
-      { email: "sarah@bartech.id", password: "doctor123", role: "doctor" },
-      { email: "john@bartech.id", password: "nurse123", role: "nurse" },
-    ];
-
-    const user = validCredentials.find(
-      (cred) => cred.email === email && cred.password === password
-    );
-
-    if (user) {
-      return { email: user.email, role: user.role };
-    } else {
-      throw new Error("Invalid email or password");
-    }
-  },
-};
-
-const Login = ({ onLogin, onCreateAccount }) => {
+const Login = ({ onLogin, onCreateAccount, onForgotPassword }) => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
+    rememberMe: false,
   });
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -67,12 +44,23 @@ const Login = ({ onLogin, onCreateAccount }) => {
     setError("");
 
     try {
-      const user = await authService.login(formData.email, formData.password);
-      onLogin(user);
-      // Simulate successful login
-      alert(`Login successful! Welcome ${user.email} (${user.role})`);
+      const result = await authService.login(
+        formData.email,
+        formData.password,
+        formData.rememberMe
+      );
+
+      if (result.success) {
+        onLogin(result.user);
+        alert(
+          `Login successful! Welcome ${result.user.firstName} ${result.user.lastName}`
+        );
+      } else {
+        setError(result.message);
+      }
     } catch (err) {
-      setError(err.message);
+      console.error("Login error:", err);
+      setError("Network error. Please check your connection and try again.");
     } finally {
       setIsLoading(false);
     }
@@ -176,7 +164,10 @@ const Login = ({ onLogin, onCreateAccount }) => {
               </div>
 
               <div className="forgot-password">
-                <button type="button" className="forgot-link">
+                <button
+                  type="button"
+                  className="forgot-link"
+                  onClick={onForgotPassword}>
                   Forgot Your Password?
                 </button>
               </div>

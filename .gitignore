@@ -5,6 +5,9 @@
 /.pnp
 .pnp.js
 
+/docs
+.FORGOT_PASSWORD_DOCUMENTATION.md
+
 # testing
 /coverage
 
