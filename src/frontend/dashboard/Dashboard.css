@@ -267,7 +267,7 @@ body {
 
 .label {
   color: #10b981;
-  font-size: 0.875rem;
+  font-size: 1rem;
   font-weight: 500;
 }
 
@@ -288,7 +288,7 @@ body {
   padding: 0.5rem 1rem;
   border-radius: 1.5rem;
   font-weight: 600;
-  font-size: 0.875rem;
+  font-size: 1rem;
   text-align: center;
   min-width: 80px;
 }
@@ -378,7 +378,7 @@ body {
 .monitoring-label {
   color: #10b981;
   font-weight: 500;
-  font-size: 0.875rem;
+  font-size: 1.1rem;
 }
 
 .monitoring-header {
@@ -411,14 +411,14 @@ body {
 .lamp-label {
   color: #10b981;
   font-weight: 500;
-  font-size: 0.875rem;
+  font-size: 1rem;
 }
 
 .lamp-badge {
   padding: 0.5rem 1rem;
   border-radius: 1.5rem;
   font-weight: 600;
-  font-size: 0.875rem;
+  font-size: 1rem;
   min-width: 80px;
 }
 
@@ -525,7 +525,7 @@ body {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  font-size: 0.875rem;
+  font-size: 1rem;
 }
 
 .legend-color {
@@ -585,7 +585,7 @@ body {
 
 .last-update {
   color: #6b7280;
-  font-size: 0.9rem;
+  font-size: 1.1rem;
   margin: 0;
 }
 
