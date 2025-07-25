@@ -272,10 +272,7 @@ router.get("/hospitals/status", async (req, res) => {
 // @desc    Test endpoint untuk verifikasi API
 // @access  Public
 router.get("/test", async (req, res) => {
-  try {
-    // Test database connection
-    const testQuery = await executeQuery('SELECT 1 as test');
-    
+  try {    
     // Get basic stats
     const hospitalCount = await executeQuery('SELECT COUNT(*) as count FROM hospital');
     const monitoringCount = await executeQuery('SELECT COUNT(*) as count FROM monitoring_data');
