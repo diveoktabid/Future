@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import toast, { Toaster } from "react-hot-toast";
 import { hospitalService } from "../services/hospitalService";
 import authService from "../services/authService";
+import webSocketService from "../services/webSocketService";
 import "./Dashboard.css";
 
 const Dashboard = ({ onLogout }) => {
@@ -52,10 +53,53 @@ const Dashboard = ({ onLogout }) => {
     fetchHospitals();
   }, [onLogout]);
 
+  // Initialize WebSocket connection and monitoring data when component mounts
+  useEffect(() => {
+    // Connect to WebSocket
+    webSocketService.connect();
+
+    // Subscribe to general monitoring updates
+    const unsubscribeMonitoring = webSocketService.subscribeToMonitoringUpdates((data) => {
+      console.log('Real-time monitoring update received:', data);
+      
+      // Update monitoring data if it matches selected hospital
+      if (selectedHospital && data.hospital_id === selectedHospital.hospital_id) {
+        setMonitoringData(data);
+
+        // Random alerts based on data thresholds
+        if (data.temperature > 30) {
+          toast.error("Suhu ruangan mencapai batas maksimum");
+        }
+        if (data.humidity > 80) {
+          toast.error("Kelembaban ruangan tidak normal");
+        }
+        if (data.gas_status === "High") {
+          toast.error("Status gas berubah menjadi High");
+        }
+      }
+    });
+
+    // Subscribe to latest data response
+    const unsubscribeLatestData = webSocketService.subscribeToLatestData((data) => {
+      console.log('Latest data received:', data);
+      if (selectedHospital && data.length > 0) {
+        const hospitalData = data.find(item => item.hospital_id === selectedHospital.hospital_id);
+        if (hospitalData) {
+          setMonitoringData(hospitalData);
+        }
+      }
+    });
+
+    // Cleanup WebSocket on unmount
+    return () => {
+      if (unsubscribeMonitoring) unsubscribeMonitoring();
+      if (unsubscribeLatestData) unsubscribeLatestData();
+      webSocketService.disconnect();
+    };
+  }, [selectedHospital]);
+
   // Fetch monitoring data when hospital is selected
   useEffect(() => {
-    let cleanupPolling = null;
-
     if (selectedHospital) {
       const fetchMonitoringData = async () => {
         try {
@@ -76,32 +120,11 @@ const Dashboard = ({ onLogout }) => {
 
       fetchMonitoringData();
 
-      // Start real-time polling for monitoring data
-      cleanupPolling = hospitalService.startMonitoringPolling(
-        selectedHospital.hospital_id,
-        (data) => {
-          setMonitoringData(data);
-
-          // Random alerts based on data thresholds
-          if (data.temperature > 30) {
-            toast.error("Suhu ruangan mencapai batas maksimum");
-          }
-          if (data.humidity > 80) {
-            toast.error("Kelembaban ruangan tidak normal");
-          }
-          if (data.gas_status === "High") {
-            toast.error("Status gas berubah menjadi High");
-          }
-        },
-        5000 // 5 seconds interval
-      );
-    }
-
-    return () => {
-      if (cleanupPolling) {
-        cleanupPolling();
+      // Request latest data via WebSocket
+      if (webSocketService.getConnectionStatus().connected) {
+        webSocketService.requestLatestData();
       }
-    };
+    }
   }, [selectedHospital]);
 
   const handleHospitalClick = (hospital) => {
