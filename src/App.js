@@ -3,6 +3,7 @@ import Dashboard from "./frontend/dashboard/Dashboard";
 import Login from "./frontend/login/Login";
 import Register from "./frontend/register/Register";
 import ForgotPassword from "./frontend/ForgotPasswordComponent/ForgotPassword";
+import ModalTest from "./frontend/components/ModalTest";
 import { useLocalStorage } from "./hooks/useLocalStorage";
 import "./styles/globals.css";
 import "./App.css";
@@ -100,6 +101,10 @@ const App = () => {
   const { user, isLoading, login, logout } = useAuth();
   const [currentView, setCurrentView] = useState("login"); // "login", "register", or "forgot-password"
 
+  // Check if we should show modal test
+  const urlParams = new URLSearchParams(window.location.search);
+  const showModalTest = urlParams.get('test') === 'modal';
+
   const handleCreateAccount = () => {
     setCurrentView("register");
   };
@@ -111,6 +116,11 @@ const App = () => {
   const handleForgotPassword = () => {
     setCurrentView("forgot-password");
   };
+
+  // Show modal test if requested
+  if (showModalTest) {
+    return <ModalTest />;
+  }
 
   // Show loading screen
   if (isLoading) {

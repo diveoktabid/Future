@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./Login.css";
 import authService from "../services/authService";
+import LoginSuccessModal from "../components/LoginSuccessModal";
 
 const Login = ({ onLogin, onCreateAccount, onForgotPassword }) => {
   const [formData, setFormData] = useState({
@@ -11,6 +12,8 @@ const Login = ({ onLogin, onCreateAccount, onForgotPassword }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [loggedInUser, setLoggedInUser] = useState(null);
 
   const handleInputChange = (e) => {
     setFormData({
@@ -51,10 +54,8 @@ const Login = ({ onLogin, onCreateAccount, onForgotPassword }) => {
       );
 
       if (result.success) {
-        onLogin(result.user);
-        alert(
-          `Login successful! Welcome ${result.user.firstName} ${result.user.lastName}`
-        );
+        setLoggedInUser(result.user);
+        setShowSuccessModal(true);
       } else {
         setError(result.message);
       }
@@ -68,6 +69,15 @@ const Login = ({ onLogin, onCreateAccount, onForgotPassword }) => {
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
+  };
+
+  const handleCloseModal = () => {
+    setShowSuccessModal(false);
+  };
+
+  const handleContinueToDashboard = () => {
+    setShowSuccessModal(false);
+    onLogin(loggedInUser);
   };
 
   return (
@@ -210,6 +220,14 @@ const Login = ({ onLogin, onCreateAccount, onForgotPassword }) => {
           </h3>
         </div>
       </div>
+
+      {/* Login Success Modal */}
+      <LoginSuccessModal
+        isOpen={showSuccessModal}
+        onClose={handleCloseModal}
+        userName={loggedInUser ? `${loggedInUser.firstName} ${loggedInUser.lastName}` : ''}
+        onContinue={handleContinueToDashboard}
+      />
     </div>
   );
 };
