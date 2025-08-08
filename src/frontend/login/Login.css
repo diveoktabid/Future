@@ -69,11 +69,11 @@ html {
   font-style: italic;
 }
 
+/* Login container styling */
 .login-container {
   background: #fff;
   box-shadow: 0 8px 32px rgba(0, 188, 212, 0.15);
-  border-radius: 32px;
-  overflow: hidden;
+  border-radius: 24px;
   max-width: 420px;
   width: 100%;
   min-width: 320px;
@@ -83,16 +83,11 @@ html {
   margin: 0;
   flex-shrink: 0;
 }
-/* Extra large screens */
+/* Large screens */
 @media (min-width: 1200px) {
   .login-container {
-    max-width: 400px;
+    max-width: 420px;
     padding: 40px 32px;
-    border-radius: 36px;
-  }
-
-  .login-left-section {
-    position: relative;
   }
 
   .footer {
@@ -100,100 +95,54 @@ html {
     bottom: 20px;
     left: 50%;
     transform: translateX(-50%);
-    margin: 0;
-    max-width: 400px;
     font-size: 12px;
     padding: 16px 20px;
-    width: auto;
-    min-width: 320px;
-  }
-} /* Medium screens */
-@media (min-width: 769px) and (max-width: 1199px) {
-  .login-container {
-    max-width: 380px;
-    padding: 36px 28px;
-  }
-
-  .login-left-section {
-    position: relative;
-  }
-
-  .footer {
-    position: absolute;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    margin: 0;
-    max-width: 380px;
-    font-size: 12px;
-    padding: 14px 18px;
-    width: auto;
-    min-width: 300px;
+    max-width: 400px;
   }
 }
 
-/* Small landscape phones and tablets */
+/* Medium screens */
+@media (min-width: 769px) and (max-width: 1199px) {
+  .login-container {
+    max-width: 400px;
+    padding: 36px 28px;
+  }
+
+  .footer {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 12px;
+    padding: 14px 18px;
+    max-width: 380px;
+  }
+}
+
+/* Tablet landscape */
 @media (max-width: 768px) and (orientation: landscape) {
   .login-page {
     flex-direction: row;
     padding: 8px;
-    min-height: 100vh;
-    overflow: hidden;
   }
 
   .login-left-section {
     width: 45%;
-    position: relative;
-    padding: 10px 8px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+    padding: 10px;
   }
 
   .login-right-section {
     width: 55%;
-    order: 0;
-    padding: 10px 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    padding: 10px;
   }
 
   .login-container {
     max-width: 350px;
     padding: 16px 20px;
-    border-radius: 12px;
   }
 
   .brand-title {
     font-size: 32px;
-    margin-bottom: 12px;
-  }
-
-  .welcome-message {
-    margin-bottom: 16px;
-  }
-
-  .welcome-message h2 {
-    font-size: 18px;
-  }
-
-  .welcome-message p {
-    font-size: 12px;
-  }
-
-  .login-form {
-    gap: 12px;
-  }
-
-  .form-input {
-    padding: 10px 14px;
-    font-size: 14px;
-  }
-
-  .signin-button {
-    padding: 10px 0;
-    font-size: 14px;
   }
 
   .footer {
@@ -201,25 +150,8 @@ html {
     bottom: 8px;
     left: 50%;
     transform: translateX(-50%);
-    margin: 0;
     font-size: 11px;
     padding: 6px 10px;
-    max-width: 300px;
-    width: auto;
-    min-width: 200px;
-    line-height: 1.2;
-    word-wrap: break-word;
-    text-align: center;
-  }
-
-  .hospital-image {
-    max-height: 120px;
-    margin-bottom: 8px;
-  }
-
-  .hospital-text h3 {
-    color: #53ab5b;
-    font-size: 14px;
   }
 }
 
@@ -358,18 +290,19 @@ html {
   text-decoration: underline;
 }
 
+/* Button styling */
 .signin-button {
   width: 100%;
   background: linear-gradient(135deg, #85ffbd 0%, #7cc7a8 100%);
   color: #ffffff;
   border: none;
-  padding: 0.875rem 1.5rem;
-  border-radius: 0.5rem;
-  font-size: 1rem;
+  padding: 16px 24px;
+  border-radius: 12px;
+  font-size: 16px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
-  margin-bottom: 1.5rem;
+  margin-bottom: 24px;
 }
 
 .signin-button:hover:not(:disabled) {
@@ -425,6 +358,7 @@ html {
   box-sizing: border-box;
 }
 
+/* Footer styling */
 .footer {
   margin: 20px auto 0 auto;
   text-align: center;
@@ -432,21 +366,14 @@ html {
   font-size: 12px;
   font-family: "Inter", sans-serif;
   padding: 16px 20px;
-  font-weight: bold;
-  flex-shrink: 0;
+  font-weight: 500;
   position: absolute;
   bottom: 20px;
   left: 50%;
   transform: translateX(-50%);
-  width: auto;
   max-width: 420px;
   z-index: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   line-height: 1.4;
-  word-wrap: break-word;
-  hyphens: auto;
 }
 
 .footer p {
@@ -465,82 +392,57 @@ html {
   }
 }
 
-/* Responsive Design */
+/* Mobile responsiveness */
 @media (max-width: 768px) {
   .login-page {
     flex-direction: column;
     padding: 10px;
-    min-height: 100vh;
-    justify-content: flex-start;
   }
 
   .login-left-section {
     width: 100%;
-    min-height: auto;
-    padding: 15px 10px 10px 10px;
-    background: linear-gradient(135deg, #a3ebb1 34%, #ffff 100%);
+    padding: 15px 10px;
   }
 
   .login-right-section {
     width: 100%;
     padding: 10px;
     order: -1;
-    background: #f5f5f5;
     flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
   }
 
   .hospital-image {
     max-height: 150px;
     margin-bottom: 10px;
-    width: auto;
   }
 
   .hospital-text h3 {
-    color: #53ab5b;
     font-size: 16px;
-    margin-bottom: 5px;
   }
 
   .login-container {
     padding: 20px 16px;
     border-radius: 16px;
-    max-width: 100%;
     width: calc(100% - 20px);
-    min-width: 0;
     margin: 0 auto;
-    box-shadow: 0 4px 20px rgba(0, 188, 212, 0.1);
   }
 
   .brand-title {
     font-size: 36px;
     margin-bottom: 16px;
-    line-height: 1.1;
-  }
-
-  .welcome-message {
-    margin-bottom: 20px;
   }
 
   .welcome-message h2 {
     font-size: 20px;
-    line-height: 1.2;
-    margin-bottom: 6px;
   }
 
   .welcome-message p {
     font-size: 13px;
   }
 
-  .login-form {
-    gap: 16px;
-  }
-
   .form-input {
     padding: 12px 14px;
-    font-size: 16px; /* Prevent zoom on iOS */
+    font-size: 16px;
     border-radius: 10px;
   }
 
@@ -548,18 +450,13 @@ html {
     padding: 12px 0;
     font-size: 16px;
     border-radius: 10px;
-    margin-top: 6px;
   }
 
   .footer {
     position: relative;
-    bottom: auto;
-    left: auto;
-    transform: none;
     margin: 10px auto 0 auto;
     font-size: 12px;
     padding: 8px 10px;
-    max-width: 100%;
     width: calc(100% - 20px);
   }
 }
@@ -677,7 +574,7 @@ html {
   }
 }
 
-/* Focus states for accessibility */
+/* Additional states */
 .form-input:focus,
 .signin-button:focus,
 .password-toggle:focus,
@@ -687,127 +584,9 @@ html {
   outline-offset: 2px;
 }
 
-/* Loading state */
 .loading {
   opacity: 0.7;
   pointer-events: none;
-}
-
-/* Very short screens */
-@media (max-height: 600px) and (min-width: 769px) {
-  .login-page {
-    flex-direction: row;
-  }
-
-  .login-left-section {
-    padding: 15px;
-  }
-
-  .login-right-section {
-    padding: 15px;
-  }
-
-  .login-container {
-    margin: 0;
-    max-width: 360px;
-    padding: 20px 24px;
-  }
-
-  .footer {
-    position: absolute;
-    bottom: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    margin: 0;
-    font-size: 12px;
-    padding: 6px 10px;
-    width: auto;
-    max-width: 320px;
-    min-width: 250px;
-    text-align: center;
-    word-wrap: break-word;
-    line-height: 1.3;
-  }
-
-  .brand-title {
-    font-size: 36px;
-    margin-bottom: 12px;
-  }
-
-  .welcome-message {
-    margin-bottom: 16px;
-  }
-
-  .hospital-image {
-    max-height: 180px;
-  }
-}
-
-/* Very short screens on mobile */
-@media (max-height: 600px) and (max-width: 768px) {
-  .login-page {
-    flex-direction: row;
-    padding: 5px;
-  }
-
-  .login-left-section {
-    width: 40%;
-    padding: 8px 5px;
-  }
-
-  .login-right-section {
-    width: 60%;
-    padding: 8px 5px;
-    order: 0;
-  }
-
-  .login-container {
-    max-width: 280px;
-    padding: 12px 16px;
-  }
-
-  .brand-title {
-    font-size: 24px;
-    margin-bottom: 8px;
-  }
-
-  .welcome-message {
-    margin-bottom: 12px;
-  }
-
-  .welcome-message h2 {
-    font-size: 16px;
-  }
-
-  .welcome-message p {
-    font-size: 11px;
-  }
-
-  .hospital-image {
-    max-height: 100px;
-    margin-bottom: 5px;
-  }
-
-  .hospital-text h3 {
-    color: #53ab5b;
-    font-size: 12px;
-  }
-
-  .footer {
-    position: absolute;
-    bottom: 5px;
-    left: 50%;
-    transform: translateX(-50%);
-    margin: 0;
-    font-size: 10px;
-    padding: 4px 8px;
-    width: auto;
-    max-width: 250px;
-    min-width: 180px;
-    text-align: center;
-    word-wrap: break-word;
-    line-height: 1.2;
-  }
 }
 
 /* Extra small screens */
@@ -910,12 +689,11 @@ html {
   }
 }
 
-/* Extra wide screens */
+/* Wide screens */
 @media (min-width: 1400px) {
   .login-container {
     max-width: 450px;
     padding: 48px 36px;
-    border-radius: 40px;
   }
 
   .brand-title {
@@ -924,10 +702,6 @@ html {
 
   .welcome-message h2 {
     font-size: 36px;
-  }
-
-  .welcome-message p {
-    font-size: 18px;
   }
 
   .form-input {
@@ -941,7 +715,7 @@ html {
   }
 }
 
-/* iPad and tablet portrait */
+/* Tablet portrait */
 @media (min-width: 769px) and (max-width: 1024px) and (orientation: portrait) {
   .login-page {
     flex-direction: column;
@@ -950,7 +724,6 @@ html {
 
   .login-left-section {
     width: 100%;
-    min-height: auto;
     padding: 20px;
     order: 1;
   }
@@ -970,44 +743,23 @@ html {
     font-size: 64px;
   }
 
-  .welcome-message h2 {
-    font-size: 28px;
-  }
-
   .footer {
     position: relative;
-    bottom: auto;
-    left: auto;
-    transform: none;
     margin: 15px auto 0 auto;
     font-size: 14px;
     padding: 12px 16px;
     max-width: 480px;
-    width: auto;
-    text-align: center;
-    word-wrap: break-word;
-    line-height: 1.4;
   }
 }
 
-/* Footer responsive adjustments for all screen sizes */
+/* Footer responsive design */
 @media (max-width: 600px) {
   .footer {
     position: relative !important;
-    bottom: auto !important;
-    left: auto !important;
-    transform: none !important;
     margin: 10px auto 0 auto !important;
-    width: calc(100% - 20px) !important;
-    max-width: calc(100% - 20px) !important;
-    min-width: auto !important;
     padding: 8px 12px !important;
     font-size: 11px !important;
     line-height: 1.3 !important;
-    word-wrap: break-word !important;
-    overflow-wrap: break-word !important;
-    white-space: normal !important;
-    text-align: center !important;
   }
 }
 
@@ -1015,9 +767,6 @@ html {
   .footer {
     font-size: 10px !important;
     padding: 6px 10px !important;
-    margin: 8px auto 0 auto !important;
-    width: calc(100% - 16px) !important;
-    line-height: 1.2 !important;
   }
 }
 
@@ -1025,38 +774,5 @@ html {
   .footer {
     font-size: 9px !important;
     padding: 5px 8px !important;
-    margin: 6px auto 0 auto !important;
-    width: calc(100% - 12px) !important;
-    line-height: 1.1 !important;
-  }
-}
-
-/* Landscape orientation footer fixes */
-@media (max-width: 768px) and (orientation: landscape) {
-  .footer {
-    position: absolute !important;
-    bottom: 3px !important;
-    left: 50% !important;
-    transform: translateX(-50%) !important;
-    margin: 0 !important;
-    font-size: 9px !important;
-    padding: 3px 6px !important;
-    max-width: 280px !important;
-    width: auto !important;
-    min-width: 180px !important;
-    line-height: 1.1 !important;
-    text-align: center !important;
-    word-wrap: break-word !important;
-  }
-}
-
-/* Very small landscape devices */
-@media (max-width: 480px) and (orientation: landscape) {
-  .footer {
-    bottom: 2px !important;
-    font-size: 8px !important;
-    padding: 2px 4px !important;
-    max-width: 200px !important;
-    min-width: 150px !important;
   }
 }

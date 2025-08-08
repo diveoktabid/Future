@@ -13,6 +13,7 @@ const Dashboard = ({ onLogout }) => {
   const [monitoringData, setMonitoringData] = useState(null);
   const [loadingMonitoring, setLoadingMonitoring] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   // Fetch hospitals data on component mount
   useEffect(() => {
@@ -59,36 +60,45 @@ const Dashboard = ({ onLogout }) => {
     webSocketService.connect();
 
     // Subscribe to general monitoring updates
-    const unsubscribeMonitoring = webSocketService.subscribeToMonitoringUpdates((data) => {
-      console.log('Real-time monitoring update received:', data);
-      
-      // Update monitoring data if it matches selected hospital
-      if (selectedHospital && data.hospital_id === selectedHospital.hospital_id) {
-        setMonitoringData(data);
+    const unsubscribeMonitoring = webSocketService.subscribeToMonitoringUpdates(
+      (data) => {
+        console.log("Real-time monitoring update received:", data);
 
-        // Random alerts based on data thresholds
-        if (data.temperature > 30) {
-          toast.error("Suhu ruangan mencapai batas maksimum");
-        }
-        if (data.humidity > 80) {
-          toast.error("Kelembaban ruangan tidak normal");
-        }
-        if (data.gas_status === "High") {
-          toast.error("Status gas berubah menjadi High");
+        // Update monitoring data if it matches selected hospital
+        if (
+          selectedHospital &&
+          data.hospital_id === selectedHospital.hospital_id
+        ) {
+          setMonitoringData(data);
+
+          // Random alerts based on data thresholds
+          if (data.temperature > 30) {
+            toast.error("Suhu ruangan mencapai batas maksimum");
+          }
+          if (data.humidity > 80) {
+            toast.error("Kelembaban ruangan tidak normal");
+          }
+          if (data.gas_status === "High") {
+            toast.error("Status gas berubah menjadi High");
+          }
         }
       }
-    });
+    );
 
     // Subscribe to latest data response
-    const unsubscribeLatestData = webSocketService.subscribeToLatestData((data) => {
-      console.log('Latest data received:', data);
-      if (selectedHospital && data.length > 0) {
-        const hospitalData = data.find(item => item.hospital_id === selectedHospital.hospital_id);
-        if (hospitalData) {
-          setMonitoringData(hospitalData);
+    const unsubscribeLatestData = webSocketService.subscribeToLatestData(
+      (data) => {
+        console.log("Latest data received:", data);
+        if (selectedHospital && data.length > 0) {
+          const hospitalData = data.find(
+            (item) => item.hospital_id === selectedHospital.hospital_id
+          );
+          if (hospitalData) {
+            setMonitoringData(hospitalData);
+          }
         }
       }
-    });
+    );
 
     // Cleanup WebSocket on unmount
     return () => {
@@ -134,6 +144,20 @@ const Dashboard = ({ onLogout }) => {
   const handleBackClick = () => {
     setSelectedHospital(null);
     setMonitoringData(null);
+  };
+
+  // Handle logout confirmation
+  const handleLogoutClick = () => {
+    setShowLogoutModal(true);
+  };
+
+  const handleConfirmLogout = () => {
+    setShowLogoutModal(false);
+    onLogout();
+  };
+
+  const handleCancelLogout = () => {
+    setShowLogoutModal(false);
   };
 
   // Helper function to get user initials
@@ -406,7 +430,7 @@ const Dashboard = ({ onLogout }) => {
               <div className="settings-icon">⚙️</div>
               <span>Settings</span>
             </button>
-            <button onClick={onLogout} className="logout-button">
+            <button onClick={handleLogoutClick} className="logout-button">
               <div className="logout-icon">🔓</div>
               <span>Log out</span>
             </button>
@@ -479,6 +503,32 @@ const Dashboard = ({ onLogout }) => {
           </div>
         )}
       </main>
+
+      {/* Logout Confirmation Modal */}
+      {showLogoutModal && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h3>Konfirmasi Logout</h3>
+            </div>
+            <div className="modal-body">
+              <p>Apakah Anda yakin ingin keluar dari dashboard?</p>
+            </div>
+            <div className="modal-actions">
+              <button
+                className="modal-button cancel-button"
+                onClick={handleCancelLogout}>
+                Tidak
+              </button>
+              <button
+                className="modal-button confirm-button"
+                onClick={handleConfirmLogout}>
+                Iya
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
