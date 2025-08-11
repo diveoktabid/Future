@@ -741,3 +741,162 @@ body {
 .modal-button:active {
   transform: translateY(0);
 }
+
+/* Historical Data Table Styles */
+.historical-data-section {
+  margin-top: 2rem;
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.historical-data-section h3 {
+  margin-bottom: 1rem;
+  color: #2d3748;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.table-container {
+  overflow-x: auto;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+}
+
+.historical-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.historical-table thead {
+  background: #f7fafc;
+}
+
+.historical-table th {
+  padding: 0.75rem;
+  text-align: left;
+  font-weight: 600;
+  color: #4a5568;
+  border-bottom: 2px solid #e2e8f0;
+  white-space: nowrap;
+}
+
+.historical-table td {
+  padding: 0.75rem;
+  border-bottom: 1px solid #e2e8f0;
+  color: #2d3748;
+}
+
+.historical-table tbody tr:hover {
+  background: #f7fafc;
+}
+
+.gas-status-badge {
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.gas-status-badge.low {
+  background: #c6f6d5;
+  color: #22543d;
+}
+
+.gas-status-badge.medium {
+  background: #fef5e7;
+  color: #c05621;
+}
+
+.gas-status-badge.high {
+  background: #fed7d7;
+  color: #c53030;
+}
+
+.status-badge-small {
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.status-badge-small.on {
+  background: #c6f6d5;
+  color: #22543d;
+}
+
+.status-badge-small.off {
+  background: #fed7d7;
+  color: #c53030;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1rem;
+  gap: 1rem;
+}
+
+.pagination-btn {
+  padding: 0.5rem 1rem;
+  background: #4299e1;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: background-color 0.2s;
+}
+
+.pagination-btn:hover:not(:disabled) {
+  background: #3182ce;
+}
+
+.pagination-btn:disabled {
+  background: #a0aec0;
+  cursor: not-allowed;
+}
+
+.pagination-info {
+  color: #4a5568;
+  font-size: 0.875rem;
+}
+
+.table-info {
+  margin-top: 0.5rem;
+  text-align: center;
+}
+
+.table-info p {
+  color: #718096;
+  font-size: 0.875rem;
+  margin: 0;
+}
+
+.loading-table,
+.no-data-table {
+  text-align: center;
+  padding: 2rem;
+  color: #718096;
+}
+
+/* Responsive table */
+@media (max-width: 768px) {
+  .table-container {
+    font-size: 0.75rem;
+  }
+
+  .historical-table th,
+  .historical-table td {
+    padding: 0.5rem;
+  }
+
+  .pagination {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}

@@ -14,6 +14,11 @@ const Dashboard = ({ onLogout }) => {
   const [loadingMonitoring, setLoadingMonitoring] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [historicalData, setHistoricalData] = useState([]);
+  const [loadingHistorical, setLoadingHistorical] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const recordsPerPage = 10;
 
   // Fetch hospitals data on component mount
   useEffect(() => {
@@ -128,7 +133,27 @@ const Dashboard = ({ onLogout }) => {
         }
       };
 
+      const fetchHistoricalData = async () => {
+        try {
+          setLoadingHistorical(true);
+          const response = await hospitalService.getHospitalMonitoring(
+            selectedHospital.hospital_id,
+            100 // Get more records for historical data
+          );
+          if (response.status === "success") {
+            setHistoricalData(response.data);
+            setTotalPages(Math.ceil(response.data.length / recordsPerPage));
+          }
+        } catch (error) {
+          console.error("Error fetching historical data:", error);
+          toast.error("Gagal memuat data riwayat");
+        } finally {
+          setLoadingHistorical(false);
+        }
+      };
+
       fetchMonitoringData();
+      fetchHistoricalData();
 
       // Request latest data via WebSocket
       if (webSocketService.getConnectionStatus().connected) {
@@ -137,13 +162,20 @@ const Dashboard = ({ onLogout }) => {
     }
   }, [selectedHospital]);
 
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
   const handleHospitalClick = (hospital) => {
     setSelectedHospital(hospital);
+    setCurrentPage(1); // Reset to first page when selecting new hospital
   };
 
   const handleBackClick = () => {
     setSelectedHospital(null);
     setMonitoringData(null);
+    setHistoricalData([]);
+    setCurrentPage(1);
   };
 
   // Handle logout confirmation
@@ -250,6 +282,159 @@ const Dashboard = ({ onLogout }) => {
     }
 
     return "User";
+  };
+
+  const getPaginatedData = () => {
+    const startIndex = (currentPage - 1) * recordsPerPage;
+    const endIndex = startIndex + recordsPerPage;
+    return historicalData.slice(startIndex, endIndex);
+  };
+
+  const formatDate = (dateString) => {
+    return new Date(dateString).toLocaleString("id-ID", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
+
+  // Render historical data table
+  const renderHistoricalDataTable = () => {
+    if (loadingHistorical) {
+      return (
+        <div className="historical-data-section">
+          <h3>Riwayat Data</h3>
+          <div className="loading-table">
+            <p>Memuat data riwayat...</p>
+          </div>
+        </div>
+      );
+    }
+
+    if (historicalData.length === 0) {
+      return (
+        <div className="historical-data-section">
+          <h3>Riwayat Data</h3>
+          <div className="no-data-table">
+            <p>Tidak ada data riwayat tersedia</p>
+          </div>
+        </div>
+      );
+    }
+
+    const paginatedData = getPaginatedData();
+
+    return (
+      <div className="historical-data-section">
+        <h3>Riwayat Data - {selectedHospital.hospital_name}</h3>
+
+        <div className="table-container">
+          <table className="historical-table">
+            <thead>
+              <tr>
+                <th>Waktu</th>
+                <th>Suhu (°C)</th>
+                <th>Kelembaban (%)</th>
+                <th>Status Gas</th>
+                <th>Lampu 1</th>
+                <th>Lampu 2</th>
+                <th>Lampu Operasi</th>
+                <th>Writing Table</th>
+                <th>Viewer</th>
+              </tr>
+            </thead>
+            <tbody>
+              {paginatedData.map((data, index) => (
+                <tr key={index}>
+                  <td>{formatDate(data.updated_at || data.timestamp)}</td>
+                  <td>{data.temperature || "N/A"}</td>
+                  <td>{data.humidity || "N/A"}</td>
+                  <td>
+                    <span
+                      className={`gas-status-badge ${data.gas_status?.toLowerCase()}`}>
+                      {data.gas_status || "N/A"}
+                    </span>
+                  </td>
+                  <td>
+                    <span
+                      className={`status-badge-small ${
+                        data.status_lampu1 === "ON" ? "on" : "off"
+                      }`}>
+                      {data.status_lampu1 || "N/A"}
+                    </span>
+                  </td>
+                  <td>
+                    <span
+                      className={`status-badge-small ${
+                        data.status_lampu2 === "ON" ? "on" : "off"
+                      }`}>
+                      {data.status_lampu2 || "N/A"}
+                    </span>
+                  </td>
+                  <td>
+                    <span
+                      className={`status-badge-small ${
+                        data.status_lampu_op === "ON" ? "on" : "off"
+                      }`}>
+                      {data.status_lampu_op || "N/A"}
+                    </span>
+                  </td>
+                  <td>
+                    <span
+                      className={`status-badge-small ${
+                        data.status_writing_table === "ON" ? "on" : "off"
+                      }`}>
+                      {data.status_writing_table || "N/A"}
+                    </span>
+                  </td>
+                  <td>
+                    <span
+                      className={`status-badge-small ${
+                        data.status_viewer === "ON" ? "on" : "off"
+                      }`}>
+                      {data.status_viewer || "N/A"}
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <div className="pagination">
+            <button
+              className="pagination-btn"
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}>
+              ‹ Sebelumnya
+            </button>
+
+            <div className="pagination-info">
+              <span>
+                Halaman {currentPage} dari {totalPages}
+              </span>
+            </div>
+
+            <button
+              className="pagination-btn"
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}>
+              Selanjutnya ›
+            </button>
+          </div>
+        )}
+
+        <div className="table-info">
+          <p>
+            Menampilkan {paginatedData.length} dari {historicalData.length} data
+          </p>
+        </div>
+      </div>
+    );
   };
 
   // Render detailed monitoring view
@@ -391,6 +576,9 @@ const Dashboard = ({ onLogout }) => {
             {new Date(monitoringData.updated_at).toLocaleString("id-ID")}
           </p>
         </div>
+
+        {/* Historical Data Table */}
+        {renderHistoricalDataTable()}
       </div>
     );
   };
