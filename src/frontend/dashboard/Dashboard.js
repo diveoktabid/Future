@@ -37,11 +37,14 @@ const Dashboard = ({ onLogout }) => {
         setLoading(true);
         const response = await hospitalService.getAllHospitals();
         if (response.status === "success") {
-          setHospitals(response.data);
+          setHospitals(response.data.hospitals || []);
+        } else {
+          setHospitals([]);
         }
       } catch (error) {
         console.error("Error fetching hospitals:", error);
         toast.error("Gagal memuat data rumah sakit");
+        setHospitals([]); // Ensure hospitals is always an array
 
         // If it's an authentication error, handle logout
         if (
@@ -636,7 +639,7 @@ const Dashboard = ({ onLogout }) => {
               <div className="loading-container">
                 <p>Loading hospitals...</p>
               </div>
-            ) : hospitals.length === 0 ? (
+            ) : !Array.isArray(hospitals) || hospitals.length === 0 ? (
               <div className="no-data-container">
                 <p>No hospitals found</p>
               </div>
