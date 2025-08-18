@@ -125,8 +125,12 @@ const Dashboard = ({ onLogout }) => {
           const response = await hospitalService.getHospitalMonitoring(
             selectedHospital.hospital_id
           );
-          if (response.status === "success" && response.data.length > 0) {
-            setMonitoringData(response.data[0]);
+          if (
+            response.status === "success" &&
+            response.data.monitoring &&
+            response.data.monitoring.length > 0
+          ) {
+            setMonitoringData(response.data.monitoring[0]);
           }
         } catch (error) {
           console.error("Error fetching monitoring data:", error);
@@ -143,9 +147,11 @@ const Dashboard = ({ onLogout }) => {
             selectedHospital.hospital_id,
             100 // Get more records for historical data
           );
-          if (response.status === "success") {
-            setHistoricalData(response.data);
-            setTotalPages(Math.ceil(response.data.length / recordsPerPage));
+          if (response.status === "success" && response.data.monitoring) {
+            setHistoricalData(response.data.monitoring);
+            setTotalPages(
+              Math.ceil(response.data.monitoring.length / recordsPerPage)
+            );
           }
         } catch (error) {
           console.error("Error fetching historical data:", error);
@@ -351,7 +357,11 @@ const Dashboard = ({ onLogout }) => {
             <tbody>
               {paginatedData.map((data, index) => (
                 <tr key={index}>
-                  <td>{formatDate(data.updated_at || data.timestamp)}</td>
+                  <td>
+                    {formatDate(
+                      data.updated_at || data.created_at || data.timestamp
+                    )}
+                  </td>
                   <td>{data.temperature || "N/A"}</td>
                   <td>{data.humidity || "N/A"}</td>
                   <td>
@@ -576,7 +586,9 @@ const Dashboard = ({ onLogout }) => {
         <div className="monitoring-footer">
           <p className="last-update">
             Last Updated:{" "}
-            {new Date(monitoringData.updated_at).toLocaleString("id-ID")}
+            {new Date(
+              monitoringData.updated_at || monitoringData.created_at
+            ).toLocaleString("id-ID")}
           </p>
         </div>
 
