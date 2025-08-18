@@ -4,6 +4,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { hospitalService } from "../services/hospitalService";
 import authService from "../services/authService";
 import webSocketService from "../services/webSocketService";
+import Settings from "../settings/Settings";
 import "./Dashboard.css";
 
 const Dashboard = ({ onLogout }) => {
@@ -18,6 +19,7 @@ const Dashboard = ({ onLogout }) => {
   const [loadingHistorical, setLoadingHistorical] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [currentView, setCurrentView] = useState('dashboard'); // 'dashboard' or 'settings'
   const recordsPerPage = 10;
 
   // Fetch hospitals data on component mount
@@ -199,6 +201,16 @@ const Dashboard = ({ onLogout }) => {
 
   const handleCancelLogout = () => {
     setShowLogoutModal(false);
+  };
+
+  // Handle navigation
+  const handleSettingsClick = () => {
+    setCurrentView('settings');
+  };
+
+  const handleDashboardClick = () => {
+    setCurrentView('dashboard');
+    setSelectedHospital(null); // Reset hospital selection when going back to dashboard
   };
 
   // Helper function to get user initials
@@ -609,9 +621,21 @@ const Dashboard = ({ onLogout }) => {
         </div>
 
         <div className="sidebar-menu">
-          <div className="menu-item active">
+          <div 
+            className={`menu-item ${currentView === 'dashboard' ? 'active' : ''}`}
+            onClick={handleDashboardClick}
+            style={{ cursor: 'pointer' }}
+          >
             <div className="menu-icon">📊</div>
             <span>Dashboard</span>
+          </div>
+          <div 
+            className={`menu-item ${currentView === 'settings' ? 'active' : ''}`}
+            onClick={handleSettingsClick}
+            style={{ cursor: 'pointer' }}
+          >
+            <div className="menu-icon">⚙️</div>
+            <span>Settings</span>
           </div>
         </div>
 
@@ -629,10 +653,6 @@ const Dashboard = ({ onLogout }) => {
           </div>
 
           <div className="sidebar-actions">
-            <button className="settings-button">
-              <div className="settings-icon">⚙️</div>
-              <span>Settings</span>
-            </button>
             <button onClick={handleLogoutClick} className="logout-button">
               <div className="logout-icon">🔓</div>
               <span>Log out</span>
@@ -643,7 +663,9 @@ const Dashboard = ({ onLogout }) => {
 
       {/* Main Content */}
       <main className="main-content">
-        {selectedHospital ? (
+        {currentView === 'settings' ? (
+          <Settings />
+        ) : selectedHospital ? (
           renderDetailedView()
         ) : (
           <div className="hospital-cards-grid">

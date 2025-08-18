@@ -4,7 +4,9 @@ import Login from "./frontend/login/Login";
 import Register from "./frontend/register/Register";
 import ForgotPassword from "./frontend/ForgotPasswordComponent/ForgotPassword";
 import ModalTest from "./frontend/components/LoginSuccessModal";
+import { SettingsProvider } from "./frontend/contexts/SettingsContext";
 import { useLocalStorage } from "./hooks/useLocalStorage";
+import "./frontend/styles/theme.css";
 import "./styles/globals.css";
 import "./App.css";
 
@@ -146,9 +148,11 @@ const App = () => {
 
   // Show dashboard if authenticated
   return (
-    <div className="app">
-      <Dashboard onLogout={logout} />
-    </div>
+    <SettingsProvider>
+      <div className="app">
+        <Dashboard onLogout={logout} />
+      </div>
+    </SettingsProvider>
   );
 };
 

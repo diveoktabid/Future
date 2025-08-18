@@ -1,4 +1,6 @@
 /* Dashboard.css */
+@import '../styles/theme.css';
+
 * {
   margin: 0;
   padding: 0;
@@ -17,8 +19,10 @@ body {
   font-family: "Inter", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #f5f5f5;
+  background: var(--bg-primary);
+  color: var(--text-primary);
   overflow-x: hidden;
+  transition: var(--transition);
 }
 
 #root {
@@ -31,20 +35,22 @@ body {
   display: flex;
   min-height: 100vh;
   width: 100vw;
-  background: linear-gradient(135deg, #a8e6cf 0%, #88d8a3 100%);
+  background: var(--bg-primary);
   overflow-x: hidden;
   margin: 0;
   padding: 0;
+  transition: var(--transition);
 }
 
 /* Sidebar Styles */
 .sidebar {
   width: 250px;
-  background: white;
+  background: var(--bg-secondary);
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  box-shadow: 2px 0 4px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow);
+  transition: var(--transition);
 }
 
 .sidebar-header {
