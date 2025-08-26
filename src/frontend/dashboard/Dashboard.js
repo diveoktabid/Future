@@ -20,6 +20,9 @@ const Dashboard = ({ onLogout }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [currentView, setCurrentView] = useState('dashboard'); // 'dashboard' or 'settings'
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 480);
+  const [showMobileSidebar, setShowMobileSidebar] = useState(false);
   const recordsPerPage = 10;
 
   // Fetch hospitals data on component mount
@@ -66,6 +69,17 @@ const Dashboard = ({ onLogout }) => {
 
   // Initialize WebSocket connection and monitoring data when component mounts
   useEffect(() => {
+    // Handle window resize
+    const handleResize = () => {
+      const mobile = window.innerWidth <= 480;
+      setIsMobile(mobile);
+      if (!mobile) {
+        setShowMobileSidebar(false);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+
     // Connect to WebSocket
     webSocketService.connect();
 
@@ -112,6 +126,7 @@ const Dashboard = ({ onLogout }) => {
 
     // Cleanup WebSocket on unmount
     return () => {
+      window.removeEventListener('resize', handleResize);
       if (unsubscribeMonitoring) unsubscribeMonitoring();
       if (unsubscribeLatestData) unsubscribeLatestData();
       webSocketService.disconnect();
@@ -211,6 +226,22 @@ const Dashboard = ({ onLogout }) => {
   const handleDashboardClick = () => {
     setCurrentView('dashboard');
     setSelectedHospital(null); // Reset hospital selection when going back to dashboard
+  };
+
+  // Handle sidebar toggle
+  const toggleSidebar = () => {
+    if (isMobile) {
+      setShowMobileSidebar(!showMobileSidebar);
+    } else {
+      setSidebarCollapsed(!sidebarCollapsed);
+    }
+  };
+
+  // Close mobile sidebar when clicking outside
+  const closeMobileSidebar = () => {
+    if (isMobile) {
+      setShowMobileSidebar(false);
+    }
   };
 
   // Helper function to get user initials
@@ -614,48 +645,83 @@ const Dashboard = ({ onLogout }) => {
     <div className="dashboard">
       <Toaster position="top-right" />
 
+      {/* Mobile Sidebar Overlay */}
+      {isMobile && (
+        <div 
+          className={`sidebar-overlay ${showMobileSidebar ? 'show' : ''}`}
+          onClick={closeMobileSidebar}
+        />
+      )}
+
       {/* Sidebar */}
-      <aside className="sidebar">
+      <aside className={`sidebar ${sidebarCollapsed ? 'collapsed' : ''} ${isMobile && showMobileSidebar ? 'show' : ''}`}>
         <div className="sidebar-header">
-          <h1>Bartech</h1>
+          {(!sidebarCollapsed || isMobile) && <h1>Bartech</h1>}
+          <button className="sidebar-toggle" onClick={toggleSidebar}>
+            <div className="hamburger">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+          </button>
         </div>
 
         <div className="sidebar-menu">
           <div 
             className={`menu-item ${currentView === 'dashboard' ? 'active' : ''}`}
-            onClick={handleDashboardClick}
+            onClick={() => {
+              handleDashboardClick();
+              if (isMobile) setShowMobileSidebar(false);
+            }}
             style={{ cursor: 'pointer' }}
+            title="Dashboard"
           >
             <div className="menu-icon">📊</div>
-            <span>Dashboard</span>
+            {(!sidebarCollapsed || isMobile) && <span>Dashboard</span>}
           </div>
           <div 
             className={`menu-item ${currentView === 'settings' ? 'active' : ''}`}
-            onClick={handleSettingsClick}
+            onClick={() => {
+              handleSettingsClick();
+              if (isMobile) setShowMobileSidebar(false);
+            }}
             style={{ cursor: 'pointer' }}
+            title="Settings"
           >
             <div className="menu-icon">⚙️</div>
-            <span>Settings</span>
+            {(!sidebarCollapsed || isMobile) && <span>Settings</span>}
           </div>
         </div>
 
         <div className="sidebar-footer">
           <div className="user-profile">
-            <div className="user-avatar">
+            <div 
+              className="user-avatar"
+              title={sidebarCollapsed ? `${getDisplayName(currentUser)} - ${getUserRole(currentUser)}` : ''}
+            >
               <div className="avatar-placeholder">
                 {getUserInitials(currentUser)}
               </div>
             </div>
-            <div className="user-info">
-              <div className="user-name">{getDisplayName(currentUser)}</div>
-              <div className="user-role">{getUserRole(currentUser)}</div>
-            </div>
+            {(!sidebarCollapsed || isMobile) && (
+              <div className="user-info">
+                <div className="user-name">{getDisplayName(currentUser)}</div>
+                <div className="user-role">{getUserRole(currentUser)}</div>
+              </div>
+            )}
           </div>
 
           <div className="sidebar-actions">
-            <button onClick={handleLogoutClick} className="logout-button">
+            <button 
+              onClick={() => {
+                handleLogoutClick();
+                if (isMobile) setShowMobileSidebar(false);
+              }} 
+              className="logout-button" 
+              title="Log out"
+            >
               <div className="logout-icon">🔓</div>
-              <span>Log out</span>
+              {(!sidebarCollapsed || isMobile) && <span>Log out</span>}
             </button>
           </div>
         </div>
@@ -663,6 +729,17 @@ const Dashboard = ({ onLogout }) => {
 
       {/* Main Content */}
       <main className="main-content">
+        {/* Mobile hamburger button */}
+        {isMobile && (
+          <button className="mobile-menu-toggle" onClick={toggleSidebar}>
+            <div className="hamburger">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+          </button>
+        )}
+        
         {currentView === 'settings' ? (
           <Settings />
         ) : selectedHospital ? (
