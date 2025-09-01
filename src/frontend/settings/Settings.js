@@ -55,17 +55,6 @@ const Settings = () => {
       </div>
 
       <div className="setting-item">
-        <label>Bahasa</label>
-        <select 
-          value={settings.language}
-          onChange={(e) => handleInputChange('language', e.target.value)}
-        >
-          <option value="id">Bahasa Indonesia</option>
-          <option value="en">English</option>
-        </select>
-      </div>
-
-      <div className="setting-item">
         <label>Zona Waktu</label>
         <select 
           value={settings.timezone}
@@ -83,7 +72,7 @@ const Settings = () => {
     <div className="settings-section">
       <h3>Pengaturan Monitoring</h3>
       
-      <div className="setting-item">
+      <div className="setting-item checkbox-item">
         <label className="checkbox-label">
           <input
             type="checkbox"
@@ -94,7 +83,7 @@ const Settings = () => {
         </label>
       </div>
 
-      <div className="setting-item">
+      <div className="setting-item checkbox-item">
         <label className="checkbox-label">
           <input
             type="checkbox"
@@ -105,7 +94,7 @@ const Settings = () => {
         </label>
       </div>
 
-      <div className="setting-item">
+      <div className="setting-item checkbox-item">
         <label className="checkbox-label">
           <input
             type="checkbox"
@@ -159,7 +148,7 @@ const Settings = () => {
         </select>
       </div>
 
-      <div className="setting-item">
+      <div className="setting-item checkbox-item">
         <label className="checkbox-label">
           <input
             type="checkbox"
@@ -188,7 +177,7 @@ const Settings = () => {
     <div className="settings-section">
       <h3>Pengaturan Tampilan</h3>
       
-      <div className="setting-item">
+      <div className="setting-item checkbox-item">
         <label className="checkbox-label">
           <input
             type="checkbox"
@@ -199,7 +188,7 @@ const Settings = () => {
         </label>
       </div>
 
-      <div className="setting-item">
+      <div className="setting-item checkbox-item">
         <label className="checkbox-label">
           <input
             type="checkbox"
@@ -210,7 +199,7 @@ const Settings = () => {
         </label>
       </div>
 
-      <div className="setting-item">
+      <div className="setting-item checkbox-item">
         <label className="checkbox-label">
           <input
             type="checkbox"
@@ -221,7 +210,7 @@ const Settings = () => {
         </label>
       </div>
 
-      <div className="setting-item">
+      <div className="setting-item checkbox-item">
         <label className="checkbox-label">
           <input
             type="checkbox"
@@ -238,7 +227,7 @@ const Settings = () => {
     <div className="settings-section">
       <h3>Pengaturan Koneksi</h3>
       
-      <div className="setting-item">
+      <div className="setting-item checkbox-item">
         <label className="checkbox-label">
           <input
             type="checkbox"

@@ -7,6 +7,32 @@ import webSocketService from "../services/webSocketService";
 import Settings from "../settings/Settings";
 import "./Dashboard.css";
 
+// Helper function to normalize IOT status
+const normalizeIotStatus = (status) => {
+  if (!status) return { cssClass: "mati", displayText: "Mati" };
+  
+  const normalizedStatus = status.toString().toLowerCase().trim();
+  
+  if (normalizedStatus === "nyala" || normalizedStatus === "on" || normalizedStatus === "online" || normalizedStatus === "1" || normalizedStatus === "true") {
+    return { cssClass: "nyala", displayText: "Nyala" };
+  } else {
+    return { cssClass: "mati", displayText: "Mati" };
+  }
+};
+
+// Helper function to normalize device status (ON/OFF)
+const normalizeDeviceStatus = (status, onText = "Nyala", offText = "Mati") => {
+  if (!status) return { cssClass: "mati", displayText: offText };
+  
+  const normalizedStatus = status.toString().toLowerCase().trim();
+  
+  if (normalizedStatus === "on" || normalizedStatus === "nyala" || normalizedStatus === "1" || normalizedStatus === "true") {
+    return { cssClass: "nyala", displayText: onText };
+  } else {
+    return { cssClass: "mati", displayText: offText };
+  }
+};
+
 const Dashboard = ({ onLogout }) => {
   const [selectedHospital, setSelectedHospital] = useState(null);
   const [hospitals, setHospitals] = useState([]);
@@ -23,7 +49,17 @@ const Dashboard = ({ onLogout }) => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 480);
   const [showMobileSidebar, setShowMobileSidebar] = useState(false);
+  const [currentTime, setCurrentTime] = useState(new Date());
   const recordsPerPage = 10;
+
+  // Update clock every second
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
 
   // Fetch hospitals data on component mount
   useEffect(() => {
@@ -87,6 +123,17 @@ const Dashboard = ({ onLogout }) => {
     const unsubscribeMonitoring = webSocketService.subscribeToMonitoringUpdates(
       (data) => {
         console.log("Real-time monitoring update received:", data);
+
+        // Update hospitals iot_status when monitoring data is received
+        if (data.hospital_id) {
+          setHospitals(prevHospitals => 
+            prevHospitals.map(hospital => 
+              hospital.hospital_id === data.hospital_id 
+                ? { ...hospital, iot_status: 'online' }
+                : hospital
+            )
+          );
+        }
 
         // Update monitoring data if it matches selected hospital
         if (
@@ -336,6 +383,49 @@ const Dashboard = ({ onLogout }) => {
     return "User";
   };
 
+  // Helper function to format current time in WIB
+  const formatCurrentTime = () => {
+    const options = {
+      timeZone: 'Asia/Jakarta',
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false
+    };
+    
+    return currentTime.toLocaleString('id-ID', options);
+  };
+
+  // Helper function to get just the time for header
+  const formatHeaderTime = () => {
+    const options = {
+      timeZone: 'Asia/Jakarta',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false
+    };
+    
+    return currentTime.toLocaleString('id-ID', options);
+  };
+
+  // Helper function to get date for header
+  const formatHeaderDate = () => {
+    const options = {
+      timeZone: 'Asia/Jakarta',
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    };
+    
+    return currentTime.toLocaleString('id-ID', options);
+  };
+
   const getPaginatedData = () => {
     const startIndex = (currentPage - 1) * recordsPerPage;
     const endIndex = startIndex + recordsPerPage;
@@ -498,6 +588,17 @@ const Dashboard = ({ onLogout }) => {
     if (loadingMonitoring) {
       return (
         <div className="detailed-monitoring">
+          {/* Time Header untuk loading state */}
+          <div className="time-header">
+            <div className="time-info">
+              <div className="current-time">
+                <span className="time-display">{formatHeaderTime()}</span>
+                <span className="timezone">WIB</span>
+              </div>
+              <div className="current-date">{formatHeaderDate()}</div>
+            </div>
+          </div>
+
           <div className="detail-header">
             <button className="back-button" onClick={handleBackClick}>
               <span>←</span>
@@ -511,6 +612,17 @@ const Dashboard = ({ onLogout }) => {
     if (!monitoringData) {
       return (
         <div className="detailed-monitoring">
+          {/* Time Header untuk no data state */}
+          <div className="time-header">
+            <div className="time-info">
+              <div className="current-time">
+                <span className="time-display">{formatHeaderTime()}</span>
+                <span className="timezone">WIB</span>
+              </div>
+              <div className="current-date">{formatHeaderDate()}</div>
+            </div>
+          </div>
+
           <div className="detail-header">
             <button className="back-button" onClick={handleBackClick}>
               <span>←</span>
@@ -525,6 +637,17 @@ const Dashboard = ({ onLogout }) => {
 
     return (
       <div className="detailed-monitoring">
+        {/* Time Header untuk detailed view */}
+        <div className="time-header">
+          <div className="time-info">
+            <div className="current-time">
+              <span className="time-display">{formatHeaderTime()}</span>
+              <span className="timezone">WIB</span>
+            </div>
+            <div className="current-date">{formatHeaderDate()}</div>
+          </div>
+        </div>
+
         <div className="detail-header">
           <button className="back-button" onClick={handleBackClick}>
             <span>←</span>
@@ -556,19 +679,15 @@ const Dashboard = ({ onLogout }) => {
             <div className="lamp-item">
               <div className="lamp-label">Status Lampu 1</div>
               <div
-                className={`lamp-badge ${
-                  monitoringData.status_lampu1 === "ON" ? "nyala" : "mati"
-                }`}>
-                {monitoringData.status_lampu1 === "ON" ? "Nyala" : "Mati"}
+                className={`lamp-badge ${normalizeDeviceStatus(monitoringData.status_lampu1).cssClass}`}>
+                {normalizeDeviceStatus(monitoringData.status_lampu1).displayText}
               </div>
             </div>
             <div className="lamp-item">
               <div className="lamp-label">Status Lampu 2</div>
               <div
-                className={`lamp-badge ${
-                  monitoringData.status_lampu2 === "ON" ? "nyala" : "mati"
-                }`}>
-                {monitoringData.status_lampu2 === "ON" ? "Nyala" : "Mati"}
+                className={`lamp-badge ${normalizeDeviceStatus(monitoringData.status_lampu2).cssClass}`}>
+                {normalizeDeviceStatus(monitoringData.status_lampu2).displayText}
               </div>
             </div>
           </div>
@@ -600,17 +719,13 @@ const Dashboard = ({ onLogout }) => {
           <div className="monitoring-card multiple-status">
             <div className="monitoring-header">Status Lampu Operasi</div>
             <div
-              className={`status-badge ${
-                monitoringData.status_lampu_op === "ON" ? "nyala" : "mati"
-              }`}>
-              {monitoringData.status_lampu_op === "ON" ? "Hidup" : "Mati"}
+              className={`status-badge ${normalizeDeviceStatus(monitoringData.status_lampu_op, "Hidup", "Mati").cssClass}`}>
+              {normalizeDeviceStatus(monitoringData.status_lampu_op, "Hidup", "Mati").displayText}
             </div>
             <div className="monitoring-header">Status Writing Table</div>
             <div
-              className={`status-badge ${
-                monitoringData.status_writing_table === "ON" ? "nyala" : "mati"
-              }`}>
-              {monitoringData.status_writing_table === "ON" ? "Nyala" : "Mati"}
+              className={`status-badge ${normalizeDeviceStatus(monitoringData.status_writing_table).cssClass}`}>
+              {normalizeDeviceStatus(monitoringData.status_writing_table).displayText}
             </div>
           </div>
 
@@ -618,10 +733,8 @@ const Dashboard = ({ onLogout }) => {
           <div className="monitoring-card">
             <div className="monitoring-header">Status Viewer</div>
             <div
-              className={`status-badge ${
-                monitoringData.status_viewer === "ON" ? "nyala" : "mati"
-              }`}>
-              {monitoringData.status_viewer === "ON" ? "Nyala" : "Mati"}
+              className={`status-badge ${normalizeDeviceStatus(monitoringData.status_viewer).cssClass}`}>
+              {normalizeDeviceStatus(monitoringData.status_viewer).displayText}
             </div>
           </div>
         </div>
@@ -631,7 +744,20 @@ const Dashboard = ({ onLogout }) => {
             Last Updated:{" "}
             {new Date(
               monitoringData.updated_at || monitoringData.created_at
-            ).toLocaleString("id-ID")}
+            ).toLocaleString("id-ID", {
+              timeZone: 'Asia/Jakarta',
+              weekday: 'long',
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric',
+              hour: '2-digit',
+              minute: '2-digit',
+              second: '2-digit',
+              hour12: false
+            })} WIB
+          </p>
+          <p className="current-server-time">
+            Current Time: {formatCurrentTime()} WIB
           </p>
         </div>
 
@@ -739,6 +865,17 @@ const Dashboard = ({ onLogout }) => {
             </div>
           </button>
         )}
+
+        {/* Time Header */}
+        <div className="time-header">
+          <div className="time-info">
+            <div className="current-time">
+              <span className="time-display">{formatHeaderTime()}</span>
+              <span className="timezone">WIB</span>
+            </div>
+            <div className="current-date">{formatHeaderDate()}</div>
+          </div>
+        </div>
         
         {currentView === 'settings' ? (
           <Settings />
@@ -792,10 +929,8 @@ const Dashboard = ({ onLogout }) => {
                     <div className="iot-status">
                       <span className="label">Status IOT</span>
                       <div
-                        className={`status-badge ${
-                          hospital.iot_status === "Nyala" ? "nyala" : "mati"
-                        }`}>
-                        {hospital.iot_status}
+                        className={`status-badge ${normalizeIotStatus(hospital.iot_status).cssClass}`}>
+                        {normalizeIotStatus(hospital.iot_status).displayText}
                       </div>
                     </div>
                   </div>
