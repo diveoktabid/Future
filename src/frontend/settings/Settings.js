@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useSettings } from '../contexts/SettingsContext';
+import { useSettings } from './SettingsContext';
 import './Settings.css';
 
 const Settings = () => {

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./ForgotPassword.css";
-import authService from "../services/authService";
+import authService from "../../../services/authService";
 
 const ForgotPassword = ({ onBackToLogin }) => {
   const [step, setStep] = useState(1); // 1: email, 2: verification code, 3: new password
