@@ -64,6 +64,9 @@ body {
   margin: -2rem -2rem 2rem -2rem;
   border-radius: 0 0 12px 12px;
   box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .time-info {
@@ -72,6 +75,7 @@ body {
   justify-content: space-between;
   max-width: 1200px;
   margin: 0 auto;
+  flex: 1;
 }
 
 .current-time {
@@ -104,17 +108,114 @@ body {
   text-align: right;
 }
 
+/* Refresh Indicator Styles */
+.refresh-indicator {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: rgba(255, 255, 255, 0.15);
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  margin-left: 1rem;
+}
+
+.refresh-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  text-align: right;
+}
+
+.refresh-interval {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.95);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  animation: refreshPulse 2s ease-in-out infinite;
+}
+
+@keyframes refreshPulse {
+  0%, 100% {
+    opacity: 0.95;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.last-refresh {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 400;
+}
+
+.manual-refresh-btn {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.manual-refresh-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: rotate(180deg);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.manual-refresh-btn:active {
+  transform: rotate(360deg) scale(0.95);
+}
+
 /* Mobile responsiveness for time header */
 @media (max-width: 768px) {
   .time-header {
     padding: 1rem;
     margin: -2rem -2rem 1.5rem -2rem;
+    flex-direction: column;
+    gap: 1rem;
   }
   
   .time-info {
     flex-direction: column;
     gap: 0.5rem;
     text-align: center;
+  }
+  
+  .refresh-indicator {
+    margin-left: 0;
+    padding: 0.5rem 0.75rem;
+    gap: 0.75rem;
+  }
+  
+  .refresh-info {
+    text-align: center;
+  }
+  
+  .refresh-interval {
+    font-size: 0.8rem;
+  }
+  
+  .last-refresh {
+    font-size: 0.7rem;
+  }
+  
+  .manual-refresh-btn {
+    width: 32px;
+    height: 32px;
+    font-size: 1rem;
   }
   
   .time-display {
@@ -531,14 +632,14 @@ body {
   margin-top: 2rem;
   padding: 1.5rem;
   text-align: center;
-  background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(5, 150, 105, 0.1) 100%);
+  background: white;
   border-radius: 12px;
-  border: 1px solid rgba(16, 185, 129, 0.2);
-  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.1);
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .last-update {
-  color: #374151;
+  color: #4a5568;
   font-size: 1rem;
   margin: 0 0 0.5rem 0;
   font-weight: 500;
@@ -553,6 +654,7 @@ body {
   padding: 0.5rem 1rem;
   border-radius: 8px;
   display: inline-block;
+  border: 1px solid rgba(16, 185, 129, 0.2);
 }
 
 /* Responsive Design for Detail View */

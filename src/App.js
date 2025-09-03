@@ -3,7 +3,7 @@ import Dashboard from "./frontend/dashboard/Dashboard";
 import Login from "./frontend/Auth/login/Login";
 import Register from "./frontend/Auth/register/Register";
 import ForgotPassword from "./frontend/Auth/ForgotPassword/ForgotPassword";
-import ModalTest from "./frontend/components/LoginSuccessModal";
+import ModalTest from "./frontend/components/LoginSuccess/LoginSuccessModal";
 import { SettingsProvider } from "./frontend/settings/SettingsContext";
 import { useLocalStorage } from "./hooks/useLocalStorage";
 import "./frontend/styles/theme.css";

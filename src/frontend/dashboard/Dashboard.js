@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import { motion } from "framer-motion";
 import toast, { Toaster } from "react-hot-toast";
 import { hospitalService } from "../../services/hospitalService";
 import authService from "../../services/authService";
 import webSocketService from "../../services/webSocketService";
+import { useSettings } from "../settings/SettingsContext";
 import Settings from "../settings/Settings";
-import Sidebar from "../components/Sidebar";
+import Sidebar from "../components/sidebar/Sidebar";
 import "./Dashboard.css";
 
 // Helper function to normalize IOT status
@@ -35,6 +36,7 @@ const normalizeDeviceStatus = (status, onText = "Nyala", offText = "Mati") => {
 };
 
 const Dashboard = ({ onLogout }) => {
+  const { settings } = useSettings(); // Use settings from context
   const [selectedHospital, setSelectedHospital] = useState(null);
   const [hospitals, setHospitals] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -51,7 +53,22 @@ const Dashboard = ({ onLogout }) => {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 480);
   const [showMobileSidebar, setShowMobileSidebar] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
+  const [lastRefresh, setLastRefresh] = useState(new Date());
   const recordsPerPage = 10;
+
+  // Use refs to get latest values in WebSocket callbacks and intervals
+  const selectedHospitalRef = useRef(selectedHospital);
+  const historicalDataRef = useRef(historicalData);
+  const refreshIntervalRef = useRef(null);
+
+  // Update refs when state changes
+  useEffect(() => {
+    selectedHospitalRef.current = selectedHospital;
+  }, [selectedHospital]);
+
+  useEffect(() => {
+    historicalDataRef.current = historicalData;
+  }, [historicalData]);
 
   // Update clock every second
   useEffect(() => {
@@ -138,12 +155,28 @@ const Dashboard = ({ onLogout }) => {
 
         // Update monitoring data if it matches selected hospital
         if (
-          selectedHospital &&
-          data.hospital_id === selectedHospital.hospital_id
+          selectedHospitalRef.current &&
+          data.hospital_id === selectedHospitalRef.current.hospital_id
         ) {
           setMonitoringData(data);
 
-          // Random alerts based on data thresholds
+          // Update historical data with the new data
+          setHistoricalData(prevHistoricalData => {
+            // Add new data to the beginning of the array
+            const updatedData = [data, ...prevHistoricalData];
+            // Optional: limit to a certain number of records to prevent memory issues
+            const limitedData = updatedData.slice(0, 1000); // Keep latest 1000 records
+            
+            // Update total pages for pagination
+            setTotalPages(Math.ceil(limitedData.length / recordsPerPage));
+            
+            return limitedData;
+          });
+
+          // Show success toast for new data received
+          toast.success(`Data monitoring baru diterima: ${new Date(data.created_at).toLocaleString('id-ID')}`);
+
+          // Alert for threshold violations
           if (data.temperature > 30) {
             toast.error("Suhu ruangan mencapai batas maksimum");
           }
@@ -161,9 +194,9 @@ const Dashboard = ({ onLogout }) => {
     const unsubscribeLatestData = webSocketService.subscribeToLatestData(
       (data) => {
         console.log("Latest data received:", data);
-        if (selectedHospital && data.length > 0) {
+        if (selectedHospitalRef.current && data.length > 0) {
           const hospitalData = data.find(
-            (item) => item.hospital_id === selectedHospital.hospital_id
+            (item) => item.hospital_id === selectedHospitalRef.current.hospital_id
           );
           if (hospitalData) {
             setMonitoringData(hospitalData);
@@ -179,7 +212,7 @@ const Dashboard = ({ onLogout }) => {
       if (unsubscribeLatestData) unsubscribeLatestData();
       webSocketService.disconnect();
     };
-  }, [selectedHospital]);
+  }, []); // Remove selectedHospital dependency to avoid reconnections
 
   // Fetch monitoring data when hospital is selected
   useEffect(() => {
@@ -235,6 +268,80 @@ const Dashboard = ({ onLogout }) => {
       }
     }
   }, [selectedHospital]);
+
+  // Auto-refresh functionality based on settings
+  const refreshData = useCallback(async () => {
+    if (!selectedHospital) return;
+    
+    try {
+      console.log(`🔄 Auto-refreshing data (interval: ${settings.refreshInterval}ms)`);
+      
+      // Update last refresh time
+      setLastRefresh(new Date());
+      
+      // Refresh monitoring data
+      const response = await hospitalService.getHospitalMonitoring(
+        selectedHospital.hospital_id
+      );
+      
+      if (response.status === "success" && response.data.monitoring && response.data.monitoring.length > 0) {
+        setMonitoringData(response.data.monitoring[0]);
+        
+        // Show subtle notification for auto-refresh (optional)
+        if (settings.showLastUpdate) {
+          toast.success("Data diperbarui", {
+            duration: 2000,
+            position: 'bottom-right',
+            style: {
+              fontSize: '12px',
+              padding: '8px 12px'
+            }
+          });
+        }
+      }
+      
+      // Also refresh historical data
+      const historicalResponse = await hospitalService.getHospitalMonitoring(
+        selectedHospital.hospital_id,
+        100
+      );
+      
+      if (historicalResponse.status === "success" && historicalResponse.data.monitoring) {
+        setHistoricalData(historicalResponse.data.monitoring);
+        setTotalPages(Math.ceil(historicalResponse.data.monitoring.length / recordsPerPage));
+      }
+      
+    } catch (error) {
+      console.error("Error during auto-refresh:", error);
+      // Don't show error toast for auto-refresh to avoid spam
+    }
+  }, [selectedHospital, settings.refreshInterval, settings.showLastUpdate, setLastRefresh, setMonitoringData, setHistoricalData, setTotalPages]);
+
+  // Setup interval refresh based on settings
+  useEffect(() => {
+    // Clear existing interval
+    if (refreshIntervalRef.current) {
+      clearInterval(refreshIntervalRef.current);
+      refreshIntervalRef.current = null;
+    }
+
+    // Only setup interval if we have a selected hospital and settings allow it
+    if (selectedHospital && settings.refreshInterval > 0) {
+      console.log(`⏰ Setting up auto-refresh interval: ${settings.refreshInterval}ms`);
+      
+      refreshIntervalRef.current = setInterval(() => {
+        refreshData();
+      }, settings.refreshInterval);
+    }
+
+    // Cleanup interval on unmount or dependencies change
+    return () => {
+      if (refreshIntervalRef.current) {
+        clearInterval(refreshIntervalRef.current);
+        refreshIntervalRef.current = null;
+      }
+    };
+  }, [selectedHospital, settings.refreshInterval, refreshData]); // Re-setup when hospital or interval changes
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -317,6 +424,21 @@ const Dashboard = ({ onLogout }) => {
     };
     
     return currentTime.toLocaleString('id-ID', options);
+  };
+
+  // Helper function to format time for refresh indicator
+  const formatTime = (date) => {
+    if (!date) return "N/A";
+    
+    const options = {
+      timeZone: 'Asia/Jakarta',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false
+    };
+    
+    return date.toLocaleString('id-ID', options);
   };
 
   const getPaginatedData = () => {
@@ -481,17 +603,6 @@ const Dashboard = ({ onLogout }) => {
     if (loadingMonitoring) {
       return (
         <div className="detailed-monitoring">
-          {/* Time Header untuk loading state */}
-          <div className="time-header">
-            <div className="time-info">
-              <div className="current-time">
-                <span className="time-display">{formatHeaderTime()}</span>
-                <span className="timezone">WIB</span>
-              </div>
-              <div className="current-date">{formatHeaderDate()}</div>
-            </div>
-          </div>
-
           <div className="detail-header">
             <button className="back-button" onClick={handleBackClick}>
               <span>←</span>
@@ -505,17 +616,6 @@ const Dashboard = ({ onLogout }) => {
     if (!monitoringData) {
       return (
         <div className="detailed-monitoring">
-          {/* Time Header untuk no data state */}
-          <div className="time-header">
-            <div className="time-info">
-              <div className="current-time">
-                <span className="time-display">{formatHeaderTime()}</span>
-                <span className="timezone">WIB</span>
-              </div>
-              <div className="current-date">{formatHeaderDate()}</div>
-            </div>
-          </div>
-
           <div className="detail-header">
             <button className="back-button" onClick={handleBackClick}>
               <span>←</span>
@@ -530,17 +630,6 @@ const Dashboard = ({ onLogout }) => {
 
     return (
       <div className="detailed-monitoring">
-        {/* Time Header untuk detailed view */}
-        <div className="time-header">
-          <div className="time-info">
-            <div className="current-time">
-              <span className="time-display">{formatHeaderTime()}</span>
-              <span className="timezone">WIB</span>
-            </div>
-            <div className="current-date">{formatHeaderDate()}</div>
-          </div>
-        </div>
-
         <div className="detail-header">
           <button className="back-button" onClick={handleBackClick}>
             <span>←</span>
@@ -700,6 +789,29 @@ const Dashboard = ({ onLogout }) => {
             </div>
             <div className="current-date">{formatHeaderDate()}</div>
           </div>
+          
+          {/* Refresh Status Indicator */}
+          {selectedHospital && settings.refreshInterval > 0 && (
+            <div className="refresh-indicator">
+              <div className="refresh-info">
+                <span className="refresh-interval">
+                  🔄 Auto: {settings.refreshInterval / 1000}s
+                </span>
+                {settings.showLastUpdate && (
+                  <span className="last-refresh">
+                    Terakhir: {formatTime(lastRefresh)}
+                  </span>
+                )}
+              </div>
+              <button 
+                className="manual-refresh-btn"
+                onClick={refreshData}
+                title="Refresh manual"
+              >
+                ⟳
+              </button>
+            </div>
+          )}
         </div>
         
         {currentView === 'settings' ? (

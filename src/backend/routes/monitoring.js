@@ -1,6 +1,6 @@
 const express = require("express");
 const { authenticateToken } = require("../middleware/auth");
-const monitoringController = require("../controllers/MonitoringController");
+const monitoringController = require("../controllers/monitoringController");
 const router = express.Router();
 
 // Public Routes (No Auth Required - for IoT devices)
@@ -14,5 +14,10 @@ router.get("/statistics", monitoringController.getMonitoringStatistics);
 
 // Development/Testing Routes
 router.post("/simulate", monitoringController.simulateMonitoringData);
+
+// Auto-simulation management routes
+router.post("/simulation/start", monitoringController.startSimulation);
+router.post("/simulation/stop", monitoringController.stopSimulation);
+router.get("/simulation/status", monitoringController.getSimulationStatus);
 
 module.exports = router;

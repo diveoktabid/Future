@@ -1,4 +1,5 @@
 const { executeQuery } = require("../config/database");
+const autoSimulation = require("../services/autoSimulation");
 
 // Submit Monitoring Data from IoT Devices
 const submitMonitoringData = async (req, res) => {
@@ -500,6 +501,84 @@ const getMonitoringStatistics = async (req, res) => {
   }
 };
 
+// Auto-simulation management endpoints
+const startSimulation = async (req, res) => {
+  try {
+    const { hospital_id, interval = 10000 } = req.body;
+    
+    if (!hospital_id) {
+      return res.status(400).json({
+        status: "error",
+        message: "Hospital ID is required"
+      });
+    }
+    
+    autoSimulation.startAutoSimulation(hospital_id, interval);
+    
+    res.json({
+      status: "success",
+      message: `Auto-simulation started for hospital ${hospital_id}`,
+      data: { hospital_id, interval }
+    });
+  } catch (error) {
+    console.error("Start simulation error:", error);
+    res.status(500).json({
+      status: "error",
+      message: "Failed to start simulation"
+    });
+  }
+};
+
+const stopSimulation = async (req, res) => {
+  try {
+    const { hospital_id } = req.body;
+    
+    if (!hospital_id) {
+      return res.status(400).json({
+        status: "error",
+        message: "Hospital ID is required"
+      });
+    }
+    
+    const stopped = autoSimulation.stopAutoSimulation(hospital_id);
+    
+    res.json({
+      status: "success",
+      message: stopped 
+        ? `Auto-simulation stopped for hospital ${hospital_id}`
+        : `No active simulation found for hospital ${hospital_id}`,
+      data: { hospital_id, was_running: stopped }
+    });
+  } catch (error) {
+    console.error("Stop simulation error:", error);
+    res.status(500).json({
+      status: "error",
+      message: "Failed to stop simulation"
+    });
+  }
+};
+
+const getSimulationStatus = async (req, res) => {
+  try {
+    const activeSimulations = autoSimulation.getActiveSimulations();
+    
+    res.json({
+      status: "success",
+      message: "Simulation status retrieved",
+      data: {
+        active_simulations: activeSimulations,
+        total_active: activeSimulations.length
+      }
+    });
+  } catch (error) {
+    console.error("Get simulation status error:", error);
+    res.status(500).json({
+      status: "error",
+      message: "Failed to get simulation status"
+    });
+  }
+};
+
 module.exports = {
   submitMonitoringData,
   getLatestMonitoringData,
@@ -507,4 +586,7 @@ module.exports = {
   getMonitoringHistory,
   simulateMonitoringData,
   getMonitoringStatistics,
+  startSimulation,
+  stopSimulation,
+  getSimulationStatus,
 };

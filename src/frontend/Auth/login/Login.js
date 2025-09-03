@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./Login.css";
 import authService from "../../../services/authService";
-import LoginSuccessModal from "../../components/LoginSuccessModal";
+import LoginSuccessModal from "../../components/LoginSuccess/LoginSuccessModal";
 
 const Login = ({ onLogin, onCreateAccount, onForgotPassword }) => {
   const [formData, setFormData] = useState({

@@ -1,4 +1,5 @@
 // Auto-simulation for real-time testing
+const monitoringController = require('../controllers/monitoringController');
 let simulationIntervals = new Map();
 
 // Function to start auto-simulation for a hospital
@@ -10,16 +11,27 @@ function startAutoSimulation(hospital_id, intervalMs = 10000) {
   
   const simulateData = async () => {
     try {
-      const fetch = require('node-fetch');
-      const response = await fetch('http://localhost:5000/api/monitoring/simulate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ hospital_id })
-      });
+      // Create mock request and response objects
+      const mockReq = {
+        body: { hospital_id },
+        app: { get: () => null } // Mock io if needed
+      };
       
-      if (response.ok) {
-        console.log(`✅ Auto-simulated data for hospital ${hospital_id}`);
-      }
+      const mockRes = {
+        json: (data) => {
+          if (data.status === 'success') {
+            console.log(`✅ Auto-simulated data for hospital ${hospital_id}`);
+          }
+        },
+        status: (code) => ({
+          json: (data) => {
+            console.error(`❌ Auto-simulation failed for hospital ${hospital_id}:`, data.message);
+          }
+        })
+      };
+      
+      // Call controller directly instead of HTTP request
+      await monitoringController.simulateMonitoringData(mockReq, mockRes);
     } catch (error) {
       console.error(`❌ Auto-simulation failed for hospital ${hospital_id}:`, error.message);
     }
