@@ -51,6 +51,74 @@ body {
   margin-left: 280px; /* Default sidebar width */
 }
 
+/* Content wrapper for smooth transitions */
+.content-wrapper {
+  transition: opacity 0.3s ease;
+}
+
+.content-wrapper.transitioning {
+  opacity: 0.7;
+}
+
+/* View containers for consistent styling */
+.view-container {
+  animation: fadeInView 0.3s ease-out;
+  position: relative;
+}
+
+@keyframes fadeInView {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.settings-view,
+.log-sistem-view,
+.detailed-view,
+.dashboard-view {
+  min-height: 400px;
+}
+
+/* Smooth transition for main content during navigation */
+.main-content.transitioning {
+  opacity: 0.8;
+  transition: opacity 0.3s ease;
+}
+
+/* Page transition loading overlay */
+.page-transition-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.9);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.page-transition-overlay.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.page-transition-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(16, 185, 129, 0.1);
+  border-top: 4px solid #10b981;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
 /* Adjust main content when sidebar is collapsed */
 .main-content.collapsed {
   margin-left: 70px; /* Collapsed sidebar width */
@@ -97,6 +165,29 @@ body {
   gap: 1.5rem;
   max-width: 1200px;
   margin: 0 auto;
+  animation: fadeInGrid 0.5s ease-out;
+}
+
+.hospital-cards-grid.selecting {
+  animation: fadeOutGrid 0.4s ease-in forwards;
+}
+
+@keyframes fadeInGrid {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOutGrid {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
 }
 
 /* Loading and No Data States */
@@ -115,10 +206,10 @@ body {
 }
 
 .loading-container .loading-spinner {
-  width: 32px;
-  height: 32px;
-  border: 3px solid rgba(107, 114, 128, 0.3);
-  border-top: 3px solid #6b7280;
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(16, 185, 129, 0.1);
+  border-top: 4px solid #10b981;
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin-bottom: 1rem;
@@ -127,6 +218,16 @@ body {
 .loading-container p,
 .no-data-container p {
   margin: 0;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
 }
 
 .hospital-card {
@@ -134,13 +235,60 @@ body {
   border-radius: 0.75rem;
   padding: 1.5rem;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.hospital-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(16, 185, 129, 0.1), transparent);
+  transition: left 0.5s ease;
 }
 
 .hospital-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  transform: scale(1.02);
+  box-shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.15);
+  border: 2px solid rgba(16, 185, 129, 0.3);
+}
+
+.hospital-card:hover::before {
+  left: 100%;
+}
+
+.hospital-card:active {
+  transform: scale(1.01);
+  transition: all 0.1s ease;
+}
+
+.hospital-card.selecting {
+  animation: cardSelecting 0.6s ease-out forwards;
+}
+
+@keyframes cardSelecting {
+  0% {
+    transform: scale(1.02);
+    opacity: 1;
+  }
+  30% {
+    transform: scale(1.05);
+    box-shadow: 0 20px 40px -10px rgba(16, 185, 129, 0.3);
+    opacity: 0.9;
+  }
+  60% {
+    transform: scale(0.98);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0;
+  }
 }
 
 .hospital-card-header {
@@ -153,6 +301,11 @@ body {
   font-size: 1.25rem;
   font-weight: 600;
   margin: 0 0 2px 0;
+  transition: color 0.3s ease;
+}
+
+.hospital-card:hover .hospital-card-header h3 {
+  color: #10b981;
 }
 
 .hospital-card-header p {
@@ -203,20 +356,49 @@ body {
   font-size: 1rem;
   text-align: center;
   min-width: 80px;
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   border: 2px solid transparent;
+  position: relative;
+  overflow: hidden;
+}
+
+.status-badge::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.hospital-card:hover .status-badge::before {
+  left: 100%;
 }
 
 .status-badge.nyala {
   background: #10b981;
   color: white;
   border-color: #10b981;
+  box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+}
+
+.hospital-card:hover .status-badge.nyala {
+  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.3);
+  transform: scale(1.05);
 }
 
 .status-badge.mati {
   background: #ef4444;
   color: white;
   border-color: #ef4444;
+  box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+}
+
+.hospital-card:hover .status-badge.mati {
+  box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.3);
+  transform: scale(1.05);
 }
 
 /* Responsive Design */
@@ -228,6 +410,14 @@ body {
   .hospital-cards-grid {
     grid-template-columns: 1fr;
     gap: 1rem;
+  }
+  
+  .hospital-card:hover {
+    transform: scale(1.01);
+  }
+  
+  .hospital-card:active {
+    transform: scale(0.99);
   }
 }
 
@@ -251,6 +441,20 @@ body {
     margin-left: 0;
     width: 100%;
     padding-top: 4rem; /* Add space for mobile toggle button */
+  }
+  
+  /* Mobile-optimized view transitions */
+  .view-container {
+    padding: 0.5rem 0;
+  }
+  
+  .content-wrapper.transitioning {
+    opacity: 0.5;
+  }
+  
+  /* Faster transitions on mobile for better UX */
+  .content-wrapper {
+    transition: opacity 0.2s ease;
   }
 }
 

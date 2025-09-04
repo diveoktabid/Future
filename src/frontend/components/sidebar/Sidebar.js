@@ -12,6 +12,7 @@ const Sidebar = ({
   onDashboardClick,
   onSettingsClick,
   onLogSistemClick,
+  onManajemenRumahSakitClick,
   onLogoutClick
 }) => {
   // Handle sidebar toggle
@@ -161,6 +162,18 @@ const Sidebar = ({
         >
           <div className="menu-icon">📋</div>
           {(!sidebarCollapsed || isMobile) && <span>Log Sistem</span>}
+        </div>
+        <div 
+          className={`menu-item ${currentView === 'manajemen-rumah-sakit' ? 'active' : ''}`}
+          onClick={() => {
+            onManajemenRumahSakitClick();
+            if (isMobile) setShowMobileSidebar(false);
+          }}
+          style={{ cursor: 'pointer' }}
+          title="Manajemen Rumah Sakit"
+        >
+          <div className="menu-icon">🏥</div>
+          {(!sidebarCollapsed || isMobile) && <span>Manajemen Rumah Sakit</span>}
         </div>
         <div 
           className={`menu-item ${currentView === 'settings' ? 'active' : ''}`}

@@ -42,6 +42,11 @@ const getAllHospitals = async (req, res) => {
       SELECT 
         h.hospital_id,
         h.hospital_name,
+        h.address,
+        h.phone,
+        h.email,
+        h.capacity,
+        h.description,
         h.installation_date,
         h.installation_time,
         h.iot_status,
@@ -400,10 +405,237 @@ const getHospitalStats = async (req, res) => {
   }
 };
 
+// Create Hospital
+const createHospital = async (req, res) => {
+  try {
+    const { name, address, phone, email, capacity, description } = req.body;
+
+    // Validate required fields
+    if (!name || !address || !phone) {
+      return res.status(400).json({
+        error: "Nama, alamat, dan telepon rumah sakit wajib diisi"
+      });
+    }
+
+    // Check if hospital name already exists
+    const existingHospital = await executeQuery(
+      "SELECT hospital_id FROM hospital WHERE hospital_name = ?",
+      [name]
+    );
+
+    if (existingHospital.length > 0) {
+      return res.status(400).json({
+        error: "Nama rumah sakit sudah ada"
+      });
+    }
+
+    // Insert new hospital
+    const insertQuery = `
+      INSERT INTO hospital (
+        hospital_name, 
+        address, 
+        phone, 
+        email, 
+        capacity, 
+        description,
+        installation_date,
+        iot_status,
+        is_active,
+        created_at
+      ) VALUES (?, ?, ?, ?, ?, ?, CURDATE(), 'inactive', 1, NOW())
+    `;
+
+    const result = await executeQuery(insertQuery, [
+      name,
+      address,
+      phone,
+      email || null,
+      capacity || null,
+      description || null
+    ]);
+
+    // Get the created hospital
+    const newHospital = await executeQuery(
+      "SELECT * FROM hospital WHERE hospital_id = ?",
+      [result.insertId]
+    );
+
+    res.status(201).json({
+      message: "Rumah sakit berhasil ditambahkan",
+      hospital: {
+        id: newHospital[0].hospital_id,
+        name: newHospital[0].hospital_name,
+        address: newHospital[0].address,
+        phone: newHospital[0].phone,
+        email: newHospital[0].email,
+        capacity: newHospital[0].capacity,
+        description: newHospital[0].description,
+        iot_status: newHospital[0].iot_status,
+        is_active: newHospital[0].is_active,
+        created_at: newHospital[0].created_at
+      }
+    });
+  } catch (error) {
+    console.error("Error creating hospital:", error);
+    res.status(500).json({
+      error: "Terjadi kesalahan internal server",
+      details: error.message
+    });
+  }
+};
+
+// Update Hospital
+const updateHospital = async (req, res) => {
+  try {
+    const hospitalId = req.params.id;
+    const { name, address, phone, email, capacity, description } = req.body;
+
+    // Validate required fields
+    if (!name || !address || !phone) {
+      return res.status(400).json({
+        error: "Nama, alamat, dan telepon rumah sakit wajib diisi"
+      });
+    }
+
+    // Check if hospital exists
+    const existingHospital = await executeQuery(
+      "SELECT hospital_id FROM hospital WHERE hospital_id = ?",
+      [hospitalId]
+    );
+
+    if (existingHospital.length === 0) {
+      return res.status(404).json({
+        error: "Rumah sakit tidak ditemukan"
+      });
+    }
+
+    // Check if hospital name already exists (exclude current hospital)
+    const duplicateName = await executeQuery(
+      "SELECT hospital_id FROM hospital WHERE hospital_name = ? AND hospital_id != ?",
+      [name, hospitalId]
+    );
+
+    if (duplicateName.length > 0) {
+      return res.status(400).json({
+        error: "Nama rumah sakit sudah ada"
+      });
+    }
+
+    // Update hospital
+    const updateQuery = `
+      UPDATE hospital SET 
+        hospital_name = ?, 
+        address = ?, 
+        phone = ?, 
+        email = ?, 
+        capacity = ?, 
+        description = ?,
+        updated_at = NOW()
+      WHERE hospital_id = ?
+    `;
+
+    await executeQuery(updateQuery, [
+      name,
+      address,
+      phone,
+      email || null,
+      capacity || null,
+      description || null,
+      hospitalId
+    ]);
+
+    // Get the updated hospital
+    const updatedHospital = await executeQuery(
+      "SELECT * FROM hospital WHERE hospital_id = ?",
+      [hospitalId]
+    );
+
+    res.json({
+      message: "Rumah sakit berhasil diperbarui",
+      hospital: {
+        id: updatedHospital[0].hospital_id,
+        name: updatedHospital[0].hospital_name,
+        address: updatedHospital[0].address,
+        phone: updatedHospital[0].phone,
+        email: updatedHospital[0].email,
+        capacity: updatedHospital[0].capacity,
+        description: updatedHospital[0].description,
+        iot_status: updatedHospital[0].iot_status,
+        is_active: updatedHospital[0].is_active,
+        updated_at: updatedHospital[0].updated_at
+      }
+    });
+  } catch (error) {
+    console.error("Error updating hospital:", error);
+    res.status(500).json({
+      error: "Terjadi kesalahan internal server",
+      details: error.message
+    });
+  }
+};
+
+// Delete Hospital
+const deleteHospital = async (req, res) => {
+  try {
+    const hospitalId = req.params.id;
+
+    // Check if hospital exists
+    const existingHospital = await executeQuery(
+      "SELECT hospital_id, hospital_name FROM hospital WHERE hospital_id = ?",
+      [hospitalId]
+    );
+
+    if (existingHospital.length === 0) {
+      return res.status(404).json({
+        error: "Rumah sakit tidak ditemukan"
+      });
+    }
+
+    // Check if hospital has monitoring data
+    const monitoringData = await executeQuery(
+      "SELECT COUNT(*) as count FROM data_monitoring WHERE hospital_id = ?",
+      [hospitalId]
+    );
+
+    if (monitoringData[0].count > 0) {
+      // Soft delete - mark as inactive instead of hard delete
+      await executeQuery(
+        "UPDATE hospital SET is_active = 0, updated_at = NOW() WHERE hospital_id = ?",
+        [hospitalId]
+      );
+
+      res.json({
+        message: "Rumah sakit berhasil dinonaktifkan (data monitoring masih tersimpan)",
+        hospital: existingHospital[0]
+      });
+    } else {
+      // Hard delete if no monitoring data
+      await executeQuery(
+        "DELETE FROM hospital WHERE hospital_id = ?",
+        [hospitalId]
+      );
+
+      res.json({
+        message: "Rumah sakit berhasil dihapus",
+        hospital: existingHospital[0]
+      });
+    }
+  } catch (error) {
+    console.error("Error deleting hospital:", error);
+    res.status(500).json({
+      error: "Terjadi kesalahan internal server",
+      details: error.message
+    });
+  }
+};
+
 module.exports = {
   getAllHospitals,
   getHospitalById,
   getHospitalMonitoring,
   addHospitalMonitoring,
   getHospitalStats,
+  createHospital,
+  updateHospital,
+  deleteHospital,
 };

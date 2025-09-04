@@ -12,6 +12,7 @@ import Header from "../components/header/Header";
 import DetailedMonitoring from "../components/detailedMonitoring/DetailedMonitoring";
 import HistoricalDataTable from "../components/historicalDataTable/HistoricalDataTable";
 import LogSistem from "../LogSistem/LogSistem";
+import HospitalManagement from "../HospitalManagement/HospitalManagement";
 import "./Dashboard.css";
 
 // Helper function to normalize IOT status
@@ -45,6 +46,9 @@ const Dashboard = ({ onLogout }) => {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 480);
   const [showMobileSidebar, setShowMobileSidebar] = useState(false);
   const [lastRefresh, setLastRefresh] = useState(getCurrentTime());
+  const [isSelectingHospital, setIsSelectingHospital] = useState(false);
+  const [selectedCardId, setSelectedCardId] = useState(null);
+  const [isTransitioning, setIsTransitioning] = useState(false);
   const recordsPerPage = 10;
 
   // Use refs to get latest values in WebSocket callbacks and intervals
@@ -335,15 +339,82 @@ const Dashboard = ({ onLogout }) => {
   };
 
   const handleHospitalClick = (hospital) => {
-    setSelectedHospital(hospital);
-    setCurrentPage(1); // Reset to first page when selecting new hospital
+    setIsSelectingHospital(true);
+    setSelectedCardId(hospital.hospital_id);
+    
+    // Add selecting class to the grid
+    const gridElement = document.querySelector('.hospital-cards-grid');
+    if (gridElement) {
+      gridElement.classList.add('selecting');
+    }
+    
+    // Add selecting class to the clicked card
+    const cardElement = document.querySelector(`[data-hospital-id="${hospital.hospital_id}"]`);
+    if (cardElement) {
+      cardElement.classList.add('selecting');
+    }
+    
+    // Show loading toast
+    const loadingToast = toast.loading('Memuat data monitoring...', {
+      style: {
+        borderRadius: '10px',
+        background: '#333',
+        color: '#fff',
+      },
+    });
+    
+    // Delay for animation effect
+    setTimeout(() => {
+      setSelectedHospital(hospital);
+      setCurrentPage(1); // Reset to first page when selecting new hospital
+      setIsSelectingHospital(false);
+      setSelectedCardId(null);
+      
+      // Dismiss loading toast
+      toast.dismiss(loadingToast);
+      
+      // Show success toast
+      toast.success(`Menampilkan data ${hospital.hospital_name}`, {
+        duration: 2000,
+        style: {
+          borderRadius: '10px',
+          background: '#10b981',
+          color: '#fff',
+        },
+      });
+    }, 600); // Match animation duration
   };
 
   const handleBackClick = () => {
-    setSelectedHospital(null);
-    setMonitoringData(null);
-    setHistoricalData([]);
-    setCurrentPage(1);
+    // Show loading effect
+    const loadingToast = toast.loading('Kembali ke dashboard...', {
+      style: {
+        borderRadius: '10px',
+        background: '#333',
+        color: '#fff',
+      },
+    });
+    
+    // Delay for smooth transition
+    setTimeout(() => {
+      setSelectedHospital(null);
+      setMonitoringData(null);
+      setHistoricalData([]);
+      setCurrentPage(1);
+      
+      // Dismiss loading toast
+      toast.dismiss(loadingToast);
+      
+      // Show success toast
+      toast.success('Kembali ke dashboard', {
+        duration: 1500,
+        style: {
+          borderRadius: '10px',
+          background: '#10b981',
+          color: '#fff',
+        },
+      });
+    }, 300);
   };
 
   // Handle logout confirmation
@@ -362,17 +433,178 @@ const Dashboard = ({ onLogout }) => {
 
   // Handle navigation
   const handleSettingsClick = () => {
-    setCurrentView('settings');
+    setIsTransitioning(true);
+    
+    // Show loading toast
+    const loadingToast = toast.loading('Memuat pengaturan...', {
+      style: {
+        borderRadius: '10px',
+        background: '#333',
+        color: '#fff',
+      },
+    });
+    
+    // Add transition class to main content
+    const mainContentElement = document.querySelector('.main-content');
+    if (mainContentElement) {
+      mainContentElement.classList.add('transitioning');
+    }
+    
+    // Delay for smooth transition
+    setTimeout(() => {
+      setCurrentView('settings');
+      setIsTransitioning(false);
+      
+      // Dismiss loading toast
+      toast.dismiss(loadingToast);
+      
+      // Show success toast
+      toast.success('Pengaturan dimuat', {
+        duration: 1500,
+        style: {
+          borderRadius: '10px',
+          background: '#10b981',
+          color: '#fff',
+        },
+      });
+      
+      // Remove transition class
+      if (mainContentElement) {
+        mainContentElement.classList.remove('transitioning');
+      }
+    }, 400);
   };
 
   const handleDashboardClick = () => {
-    setCurrentView('dashboard');
-    setSelectedHospital(null); // Reset hospital selection when going back to dashboard
+    setIsTransitioning(true);
+    
+    // Show loading toast
+    const loadingToast = toast.loading('Kembali ke dashboard...', {
+      style: {
+        borderRadius: '10px',
+        background: '#333',
+        color: '#fff',
+      },
+    });
+    
+    // Add transition class to main content
+    const mainContentElement = document.querySelector('.main-content');
+    if (mainContentElement) {
+      mainContentElement.classList.add('transitioning');
+    }
+    
+    // Delay for smooth transition
+    setTimeout(() => {
+      setCurrentView('dashboard');
+      setSelectedHospital(null); // Reset hospital selection when going back to dashboard
+      setIsTransitioning(false);
+      
+      // Dismiss loading toast
+      toast.dismiss(loadingToast);
+      
+      // Show success toast
+      toast.success('Dashboard dimuat', {
+        duration: 1500,
+        style: {
+          borderRadius: '10px',
+          background: '#10b981',
+          color: '#fff',
+        },
+      });
+      
+      // Remove transition class
+      if (mainContentElement) {
+        mainContentElement.classList.remove('transitioning');
+      }
+    }, 400);
   };
 
   const handleLogSistemClick = () => {
-    setCurrentView('log-sistem');
-    setSelectedHospital(null); // Reset hospital selection when going to log sistem
+    setIsTransitioning(true);
+    
+    // Show loading toast
+    const loadingToast = toast.loading('Memuat log sistem...', {
+      style: {
+        borderRadius: '10px',
+        background: '#333',
+        color: '#fff',
+      },
+    });
+    
+    // Add transition class to main content
+    const mainContentElement = document.querySelector('.main-content');
+    if (mainContentElement) {
+      mainContentElement.classList.add('transitioning');
+    }
+    
+    // Delay for smooth transition
+    setTimeout(() => {
+      setCurrentView('log-sistem');
+      setSelectedHospital(null); // Reset hospital selection when going to log sistem
+      setIsTransitioning(false);
+      
+      // Dismiss loading toast
+      toast.dismiss(loadingToast);
+      
+      // Show success toast
+      toast.success('Log sistem dimuat', {
+        duration: 1500,
+        style: {
+          borderRadius: '10px',
+          background: '#10b981',
+          color: '#fff',
+        },
+      });
+      
+      // Remove transition class
+      if (mainContentElement) {
+        mainContentElement.classList.remove('transitioning');
+      }
+    }, 400);
+  };
+
+  const handleManajemenRumahSakitClick = () => {
+    setIsTransitioning(true);
+    
+    // Show loading toast
+    const loadingToast = toast.loading('Memuat manajemen rumah sakit...', {
+      style: {
+        borderRadius: '10px',
+        background: '#333',
+        color: '#fff',
+      },
+    });
+    
+    // Add transition class to main content
+    const mainContentElement = document.querySelector('.main-content');
+    if (mainContentElement) {
+      mainContentElement.classList.add('transitioning');
+    }
+    
+    // Delay for smooth transition
+    setTimeout(() => {
+      setCurrentView('manajemen-rumah-sakit');
+      setSelectedHospital(null); // Reset hospital selection when going to manajemen rumah sakit
+      setIsTransitioning(false);
+      
+      // Dismiss loading toast
+      toast.dismiss(loadingToast);
+      
+      // Show success toast
+      toast.success('Manajemen rumah sakit dimuat', {
+        duration: 1500,
+        style: {
+          borderRadius: '10px',
+          background: '#10b981',
+          color: '#fff',
+        },
+      });
+      
+      // Remove transition class
+      if (mainContentElement) {
+        mainContentElement.classList.remove('transitioning');
+      }
+    }, 400);
   };
   
 
@@ -415,6 +647,7 @@ const Dashboard = ({ onLogout }) => {
         onDashboardClick={handleDashboardClick}
         onSettingsClick={handleSettingsClick}
         onLogSistemClick={handleLogSistemClick}
+        onManajemenRumahSakitClick={handleManajemenRumahSakitClick}
         onLogoutClick={handleLogoutClick}
       />
 
@@ -439,14 +672,57 @@ const Dashboard = ({ onLogout }) => {
           onManualRefresh={refreshData}
         />
         
-        {currentView === 'settings' ? (
-          <Settings />
-        ) : currentView === 'log-sistem' ? (
-          <LogSistem />
-        ) : selectedHospital ? (
-          renderDetailedView()
-        ) : (
-          <div className="hospital-cards-grid">
+        {/* Content with smooth transitions */}
+        <div className={`content-wrapper ${isTransitioning ? 'transitioning' : ''}`}>
+          {currentView === 'settings' ? (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="view-container settings-view"
+            >
+              <Settings />
+            </motion.div>
+          ) : currentView === 'log-sistem' ? (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="view-container log-sistem-view"
+            >
+              <LogSistem />
+            </motion.div>
+          ) : currentView === 'manajemen-rumah-sakit' ? (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="view-container manajemen-rumah-sakit-view"
+            >
+              <HospitalManagement />
+            </motion.div>
+          ) : selectedHospital ? (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="view-container detailed-view"
+            >
+              {renderDetailedView()}
+            </motion.div>
+          ) : (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="view-container dashboard-view"
+            >
+              <div className={`hospital-cards-grid ${isSelectingHospital ? 'selecting' : ''}`}>
             {loading ? (
               <div className="loading-container">
                 <div className="loading-spinner"></div>
@@ -460,11 +736,22 @@ const Dashboard = ({ onLogout }) => {
               hospitals.map((hospital, index) => (
                 <motion.div
                   key={hospital.hospital_id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
                   transition={{ delay: index * 0.1 }}
-                  className="hospital-card"
-                  onClick={() => handleHospitalClick(hospital)}>
+                  className={`hospital-card ${
+                    selectedCardId === hospital.hospital_id ? 'selecting' : ''
+                  }`}
+                  data-hospital-id={hospital.hospital_id}
+                  onClick={() => handleHospitalClick(hospital)}
+                  whileHover={{ 
+                    scale: 1.02,
+                    transition: { duration: 0.2 }
+                  }}
+                  whileTap={{ 
+                    scale: 0.98,
+                    transition: { duration: 0.1 }
+                  }}>
                   <div className="hospital-card-header">
                     <h3>{hospital.hospital_name}</h3>
                   </div>
@@ -495,8 +782,10 @@ const Dashboard = ({ onLogout }) => {
                 </motion.div>
               ))
             )}
-          </div>
-        )}
+              </div>
+            </motion.div>
+          )}
+        </div>
       </main>
 
       {/* Logout Confirmation Modal */}
