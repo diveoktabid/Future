@@ -5,8 +5,13 @@ import { hospitalService } from "../../services/hospitalService";
 import authService from "../../services/authService";
 import webSocketService from "../../services/webSocketService";
 import { useSettings } from "../settings/SettingsContext";
+import { getCurrentTime, formatDate } from "../components/header/Header";
 import Settings from "../settings/Settings";
 import Sidebar from "../components/sidebar/Sidebar";
+import Header from "../components/header/Header";
+import DetailedMonitoring from "../components/detailedMonitoring/DetailedMonitoring";
+import HistoricalDataTable from "../components/historicalDataTable/HistoricalDataTable";
+import LogSistem from "../LogSistem/LogSistem";
 import "./Dashboard.css";
 
 // Helper function to normalize IOT status
@@ -19,19 +24,6 @@ const normalizeIotStatus = (status) => {
     return { cssClass: "nyala", displayText: "Nyala" };
   } else {
     return { cssClass: "mati", displayText: "Mati" };
-  }
-};
-
-// Helper function to normalize device status (ON/OFF)
-const normalizeDeviceStatus = (status, onText = "Nyala", offText = "Mati") => {
-  if (!status) return { cssClass: "mati", displayText: offText };
-  
-  const normalizedStatus = status.toString().toLowerCase().trim();
-  
-  if (normalizedStatus === "on" || normalizedStatus === "nyala" || normalizedStatus === "1" || normalizedStatus === "true") {
-    return { cssClass: "nyala", displayText: onText };
-  } else {
-    return { cssClass: "mati", displayText: offText };
   }
 };
 
@@ -52,8 +44,7 @@ const Dashboard = ({ onLogout }) => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 480);
   const [showMobileSidebar, setShowMobileSidebar] = useState(false);
-  const [currentTime, setCurrentTime] = useState(new Date());
-  const [lastRefresh, setLastRefresh] = useState(new Date());
+  const [lastRefresh, setLastRefresh] = useState(getCurrentTime());
   const recordsPerPage = 10;
 
   // Use refs to get latest values in WebSocket callbacks and intervals
@@ -69,15 +60,6 @@ const Dashboard = ({ onLogout }) => {
   useEffect(() => {
     historicalDataRef.current = historicalData;
   }, [historicalData]);
-
-  // Update clock every second
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentTime(new Date());
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, []);
 
   // Fetch hospitals data on component mount
   useEffect(() => {
@@ -118,7 +100,12 @@ const Dashboard = ({ onLogout }) => {
       }
     };
 
-    fetchHospitals();
+    // Add a small delay to prevent flash when loading is very fast
+    const timeoutId = setTimeout(() => {
+      fetchHospitals();
+    }, 50);
+
+    return () => clearTimeout(timeoutId);
   }, [onLogout]);
 
   // Initialize WebSocket connection and monitoring data when component mounts
@@ -174,7 +161,7 @@ const Dashboard = ({ onLogout }) => {
           });
 
           // Show success toast for new data received
-          toast.success(`Data monitoring baru diterima: ${new Date(data.created_at).toLocaleString('id-ID')}`);
+          toast.success(`Data monitoring baru diterima: ${formatDate(data.created_at)}`);
 
           // Alert for threshold violations
           if (data.temperature > 30) {
@@ -277,7 +264,7 @@ const Dashboard = ({ onLogout }) => {
       console.log(`🔄 Auto-refreshing data (interval: ${settings.refreshInterval}ms)`);
       
       // Update last refresh time
-      setLastRefresh(new Date());
+      setLastRefresh(getCurrentTime());
       
       // Refresh monitoring data
       const response = await hospitalService.getHospitalMonitoring(
@@ -383,369 +370,32 @@ const Dashboard = ({ onLogout }) => {
     setSelectedHospital(null); // Reset hospital selection when going back to dashboard
   };
 
-  // Helper function to format current time in WIB
-  const formatCurrentTime = () => {
-    const options = {
-      timeZone: 'Asia/Jakarta',
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
-      hour12: false
-    };
-    
-    return currentTime.toLocaleString('id-ID', options);
+  const handleLogSistemClick = () => {
+    setCurrentView('log-sistem');
+    setSelectedHospital(null); // Reset hospital selection when going to log sistem
   };
-
-  // Helper function to get just the time for header
-  const formatHeaderTime = () => {
-    const options = {
-      timeZone: 'Asia/Jakarta',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
-      hour12: false
-    };
-    
-    return currentTime.toLocaleString('id-ID', options);
-  };
-
-  // Helper function to get date for header
-  const formatHeaderDate = () => {
-    const options = {
-      timeZone: 'Asia/Jakarta',
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    };
-    
-    return currentTime.toLocaleString('id-ID', options);
-  };
-
-  // Helper function to format time for refresh indicator
-  const formatTime = (date) => {
-    if (!date) return "N/A";
-    
-    const options = {
-      timeZone: 'Asia/Jakarta',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
-      hour12: false
-    };
-    
-    return date.toLocaleString('id-ID', options);
-  };
-
-  const getPaginatedData = () => {
-    const startIndex = (currentPage - 1) * recordsPerPage;
-    const endIndex = startIndex + recordsPerPage;
-    return historicalData.slice(startIndex, endIndex);
-  };
-
-  const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleString("id-ID", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  };
-
-  // Render historical data table
-  const renderHistoricalDataTable = () => {
-    if (loadingHistorical) {
-      return (
-        <div className="historical-data-section">
-          <h3>Riwayat Data</h3>
-          <div className="loading-table">
-            <p>Memuat data riwayat...</p>
-          </div>
-        </div>
-      );
-    }
-
-    if (historicalData.length === 0) {
-      return (
-        <div className="historical-data-section">
-          <h3>Riwayat Data</h3>
-          <div className="no-data-table">
-            <p>Tidak ada data riwayat tersedia</p>
-          </div>
-        </div>
-      );
-    }
-
-    const paginatedData = getPaginatedData();
-
-    return (
-      <div className="historical-data-section">
-        <h3>Riwayat Data - {selectedHospital.hospital_name}</h3>
-
-        <div className="table-container">
-          <table className="historical-table">
-            <thead>
-              <tr>
-                <th>Waktu</th>
-                <th>Suhu (°C)</th>
-                <th>Kelembaban (%)</th>
-                <th>Status Gas</th>
-                <th>Lampu 1</th>
-                <th>Lampu 2</th>
-                <th>Lampu Operasi</th>
-                <th>Writing Table</th>
-                <th>Viewer</th>
-              </tr>
-            </thead>
-            <tbody>
-              {paginatedData.map((data, index) => (
-                <tr key={index}>
-                  <td>
-                    {formatDate(
-                      data.updated_at || data.created_at || data.timestamp
-                    )}
-                  </td>
-                  <td>{data.temperature || "N/A"}</td>
-                  <td>{data.humidity || "N/A"}</td>
-                  <td>
-                    <span
-                      className={`gas-status-badge ${data.gas_status?.toLowerCase()}`}>
-                      {data.gas_status || "N/A"}
-                    </span>
-                  </td>
-                  <td>
-                    <span
-                      className={`status-badge-small ${
-                        data.status_lampu1 === "ON" ? "on" : "off"
-                      }`}>
-                      {data.status_lampu1 || "N/A"}
-                    </span>
-                  </td>
-                  <td>
-                    <span
-                      className={`status-badge-small ${
-                        data.status_lampu2 === "ON" ? "on" : "off"
-                      }`}>
-                      {data.status_lampu2 || "N/A"}
-                    </span>
-                  </td>
-                  <td>
-                    <span
-                      className={`status-badge-small ${
-                        data.status_lampu_op === "ON" ? "on" : "off"
-                      }`}>
-                      {data.status_lampu_op || "N/A"}
-                    </span>
-                  </td>
-                  <td>
-                    <span
-                      className={`status-badge-small ${
-                        data.status_writing_table === "ON" ? "on" : "off"
-                      }`}>
-                      {data.status_writing_table || "N/A"}
-                    </span>
-                  </td>
-                  <td>
-                    <span
-                      className={`status-badge-small ${
-                        data.status_viewer === "ON" ? "on" : "off"
-                      }`}>
-                      {data.status_viewer || "N/A"}
-                    </span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        {/* Pagination */}
-        {totalPages > 1 && (
-          <div className="pagination">
-            <button
-              className="pagination-btn"
-              onClick={() => handlePageChange(currentPage - 1)}
-              disabled={currentPage === 1}>
-              ‹ Sebelumnya
-            </button>
-
-            <div className="pagination-info">
-              <span>
-                Halaman {currentPage} dari {totalPages}
-              </span>
-            </div>
-
-            <button
-              className="pagination-btn"
-              onClick={() => handlePageChange(currentPage + 1)}
-              disabled={currentPage === totalPages}>
-              Selanjutnya ›
-            </button>
-          </div>
-        )}
-
-        <div className="table-info">
-          <p>
-            Menampilkan {paginatedData.length} dari {historicalData.length} data
-          </p>
-        </div>
-      </div>
-    );
-  };
+  
 
   // Render detailed monitoring view
   const renderDetailedView = () => {
-    if (loadingMonitoring) {
-      return (
-        <div className="detailed-monitoring">
-          <div className="detail-header">
-            <button className="back-button" onClick={handleBackClick}>
-              <span>←</span>
-            </button>
-            <h2>Loading monitoring data...</h2>
-          </div>
-        </div>
-      );
-    }
-
-    if (!monitoringData) {
-      return (
-        <div className="detailed-monitoring">
-          <div className="detail-header">
-            <button className="back-button" onClick={handleBackClick}>
-              <span>←</span>
-            </button>
-            <h2>
-              No monitoring data available for {selectedHospital.hospital_name}
-            </h2>
-          </div>
-        </div>
-      );
-    }
-
     return (
-      <div className="detailed-monitoring">
-        <div className="detail-header">
-          <button className="back-button" onClick={handleBackClick}>
-            <span>←</span>
-          </button>
-          <h2>Status Monitoring - {selectedHospital.hospital_name}</h2>
-        </div>
-
-        <div className="monitoring-grid">
-          {/* Temperature */}
-          <div className="monitoring-card">
-            <div className="monitoring-icon">🌡️</div>
-            <div className="monitoring-value">
-              {monitoringData.temperature
-                ? `${monitoringData.temperature}°C`
-                : "N/A"}
-            </div>
-            <div className="monitoring-label">Suhu Temperature Ruangan</div>
-          </div>
-
-          {/* Humidity */}
-          <div className="monitoring-card">
-            <div className="monitoring-icon">💧</div>
-            <div className="monitoring-value">{monitoringData.humidity}%</div>
-            <div className="monitoring-label">Kelembapan Ruangan</div>
-          </div>
-
-          {/* Lamp Status */}
-          <div className="monitoring-card lamp-status">
-            <div className="lamp-item">
-              <div className="lamp-label">Status Lampu 1</div>
-              <div
-                className={`lamp-badge ${normalizeDeviceStatus(monitoringData.status_lampu1).cssClass}`}>
-                {normalizeDeviceStatus(monitoringData.status_lampu1).displayText}
-              </div>
-            </div>
-            <div className="lamp-item">
-              <div className="lamp-label">Status Lampu 2</div>
-              <div
-                className={`lamp-badge ${normalizeDeviceStatus(monitoringData.status_lampu2).cssClass}`}>
-                {normalizeDeviceStatus(monitoringData.status_lampu2).displayText}
-              </div>
-            </div>
-          </div>
-
-          {/* Gas Status */}
-          <div className="monitoring-card gas-card">
-            <div className="gas-header">Status Gas</div>
-            <div className="gas-indicator">
-              <div
-                className={`gas-level ${monitoringData.gas_status.toLowerCase()}`}></div>
-            </div>
-            <div className="gas-legend">
-              <div className="legend-item">
-                <div className="legend-color low"></div>
-                <span>Low</span>
-              </div>
-              <div className="legend-item">
-                <div className="legend-color medium"></div>
-                <span>Medium</span>
-              </div>
-              <div className="legend-item">
-                <div className="legend-color high"></div>
-                <span>High</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Operation Lights && Writing Table */}
-          <div className="monitoring-card multiple-status">
-            <div className="monitoring-header">Status Lampu Operasi</div>
-            <div
-              className={`status-badge ${normalizeDeviceStatus(monitoringData.status_lampu_op, "Hidup", "Mati").cssClass}`}>
-              {normalizeDeviceStatus(monitoringData.status_lampu_op, "Hidup", "Mati").displayText}
-            </div>
-            <div className="monitoring-header">Status Writing Table</div>
-            <div
-              className={`status-badge ${normalizeDeviceStatus(monitoringData.status_writing_table).cssClass}`}>
-              {normalizeDeviceStatus(monitoringData.status_writing_table).displayText}
-            </div>
-          </div>
-
-          {/* Viewer */}
-          <div className="monitoring-card">
-            <div className="monitoring-header">Status Viewer</div>
-            <div
-              className={`status-badge ${normalizeDeviceStatus(monitoringData.status_viewer).cssClass}`}>
-              {normalizeDeviceStatus(monitoringData.status_viewer).displayText}
-            </div>
-          </div>
-        </div>
-
-        <div className="monitoring-footer">
-          <p className="last-update">
-            Last Updated:{" "}
-            {new Date(
-              monitoringData.updated_at || monitoringData.created_at
-            ).toLocaleString("id-ID", {
-              timeZone: 'Asia/Jakarta',
-              weekday: 'long',
-              year: 'numeric',
-              month: 'long',
-              day: 'numeric',
-              hour: '2-digit',
-              minute: '2-digit',
-              second: '2-digit',
-              hour12: false
-            })} WIB
-          </p>
-          <p className="current-server-time">
-            Current Time: {formatCurrentTime()} WIB
-          </p>
-        </div>
-
-        {/* Historical Data Table */}
-        {renderHistoricalDataTable()}
-      </div>
+      <DetailedMonitoring
+        selectedHospital={selectedHospital}
+        monitoringData={monitoringData}
+        loadingMonitoring={loadingMonitoring}
+        onBackClick={handleBackClick}
+        historicalDataTable={
+          <HistoricalDataTable
+            historicalData={historicalData}
+            loadingHistorical={loadingHistorical}
+            selectedHospital={selectedHospital}
+            currentPage={currentPage}
+            totalPages={totalPages}
+            recordsPerPage={recordsPerPage}
+            onPageChange={handlePageChange}
+          />
+        }
+      />
     );
   };
 
@@ -764,6 +414,7 @@ const Dashboard = ({ onLogout }) => {
         setShowMobileSidebar={setShowMobileSidebar}
         onDashboardClick={handleDashboardClick}
         onSettingsClick={handleSettingsClick}
+        onLogSistemClick={handleLogSistemClick}
         onLogoutClick={handleLogoutClick}
       />
 
@@ -781,52 +432,29 @@ const Dashboard = ({ onLogout }) => {
         )}
 
         {/* Time Header */}
-        <div className="time-header">
-          <div className="time-info">
-            <div className="current-time">
-              <span className="time-display">{formatHeaderTime()}</span>
-              <span className="timezone">WIB</span>
-            </div>
-            <div className="current-date">{formatHeaderDate()}</div>
-          </div>
-          
-          {/* Refresh Status Indicator */}
-          {selectedHospital && settings.refreshInterval > 0 && (
-            <div className="refresh-indicator">
-              <div className="refresh-info">
-                <span className="refresh-interval">
-                  🔄 Auto: {settings.refreshInterval / 1000}s
-                </span>
-                {settings.showLastUpdate && (
-                  <span className="last-refresh">
-                    Terakhir: {formatTime(lastRefresh)}
-                  </span>
-                )}
-              </div>
-              <button 
-                className="manual-refresh-btn"
-                onClick={refreshData}
-                title="Refresh manual"
-              >
-                ⟳
-              </button>
-            </div>
-          )}
-        </div>
+        <Header 
+          selectedHospital={selectedHospital}
+          settings={settings}
+          lastRefresh={lastRefresh}
+          onManualRefresh={refreshData}
+        />
         
         {currentView === 'settings' ? (
           <Settings />
+        ) : currentView === 'log-sistem' ? (
+          <LogSistem />
         ) : selectedHospital ? (
           renderDetailedView()
         ) : (
           <div className="hospital-cards-grid">
             {loading ? (
               <div className="loading-container">
-                <p>Loading hospitals...</p>
+                <div className="loading-spinner"></div>
+                <p>Memuat data rumah sakit...</p>
               </div>
             ) : !Array.isArray(hospitals) || hospitals.length === 0 ? (
               <div className="no-data-container">
-                <p>No hospitals found</p>
+                <p>Tidak ada data rumah sakit</p>
               </div>
             ) : (
               hospitals.map((hospital, index) => (
@@ -845,14 +473,7 @@ const Dashboard = ({ onLogout }) => {
                     <div className="installation-date">
                       <span className="label">Tanggal Instalasi</span>
                       <span className="value">
-                        {new Date(
-                          hospital.installation_date
-                        ).toLocaleDateString("id-ID", {
-                          weekday: "long",
-                          year: "numeric",
-                          month: "long",
-                          day: "numeric",
-                        })}
+                        {formatDate(hospital.installation_date)}
                       </span>
                     </div>
 

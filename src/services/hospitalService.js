@@ -91,6 +91,40 @@ export const hospitalService = {
     }
   },
 
+  // Get historical data for a hospital
+  getHistoricalData: async (hospitalId, limit = 50) => {
+    try {
+      const response = await fetch(
+        `${API_BASE_URL}/hospitals/${hospitalId}/monitoring/history?limit=${limit}`,
+        {
+          method: "GET",
+          headers: createHeaders(),
+        }
+      );
+      return await handleResponse(response);
+    } catch (error) {
+      console.error("Error fetching historical data:", error);
+      throw error;
+    }
+  },
+
+  // Get all monitoring history from monitoring_data table
+  getAllMonitoringHistory: async (page = 1, limit = 20, order = "desc") => {
+    try {
+      const response = await fetch(
+        `${API_BASE_URL}/monitoring/history?page=${page}&limit=${limit}&order=${order}`,
+        {
+          method: "GET",
+          headers: createHeaders(),
+        }
+      );
+      return await handleResponse(response);
+    } catch (error) {
+      console.error("Error fetching all monitoring history:", error);
+      throw error;
+    }
+  },
+
   // Get real-time monitoring data (polling)
   startMonitoringPolling: (hospitalId, callback, interval = 5000) => {
     const pollData = async () => {

@@ -210,17 +210,6 @@ const Settings = () => {
         </label>
       </div>
 
-      <div className="setting-item checkbox-item">
-        <label className="checkbox-label">
-          <input
-            type="checkbox"
-            checked={settings.soundAlerts}
-            onChange={(e) => handleInputChange('soundAlerts', e.target.checked)}
-          />
-          Suara Peringatan
-        </label>
-      </div>
-
       <div className="setting-item">
         <label>Batas Kritis (%)</label>
         <input
@@ -243,48 +232,6 @@ const Settings = () => {
           onChange={(e) => handleInputChange('warningThreshold', parseInt(e.target.value))}
         />
         <span className="range-value">{settings.warningThreshold}%</span>
-      </div>
-    </div>
-  );
-
-  const renderDataSettings = () => (
-    <div className="settings-section">
-      <h3>Pengaturan Data</h3>
-      
-      <div className="setting-item">
-        <label>Penyimpanan Data (hari)</label>
-        <select 
-          value={settings.dataRetentionDays}
-          onChange={(e) => handleInputChange('dataRetentionDays', parseInt(e.target.value))}
-        >
-          <option value={7}>7 hari</option>
-          <option value={30}>30 hari</option>
-          <option value={90}>90 hari</option>
-          <option value={365}>1 tahun</option>
-        </select>
-      </div>
-
-      <div className="setting-item checkbox-item">
-        <label className="checkbox-label">
-          <input
-            type="checkbox"
-            checked={settings.autoBackup}
-            onChange={(e) => handleInputChange('autoBackup', e.target.checked)}
-          />
-          Backup Otomatis
-        </label>
-      </div>
-
-      <div className="setting-item">
-        <label>Format Export</label>
-        <select 
-          value={settings.exportFormat}
-          onChange={(e) => handleInputChange('exportFormat', e.target.value)}
-        >
-          <option value="csv">CSV</option>
-          <option value="json">JSON</option>
-          <option value="excel">Excel</option>
-        </select>
       </div>
     </div>
   );
@@ -404,12 +351,6 @@ const Settings = () => {
             📊 Monitoring
           </button>
           <button 
-            className={`tab ${activeTab === 'data' ? 'active' : ''}`}
-            onClick={() => setActiveTab('data')}
-          >
-            💾 Data
-          </button>
-          <button 
             className={`tab ${activeTab === 'display' ? 'active' : ''}`}
             onClick={() => setActiveTab('display')}
           >
@@ -426,7 +367,6 @@ const Settings = () => {
         <div className="settings-panel">
           {activeTab === 'general' && renderGeneralSettings()}
           {activeTab === 'monitoring' && renderMonitoringSettings()}
-          {activeTab === 'data' && renderDataSettings()}
           {activeTab === 'display' && renderDisplaySettings()}
           {activeTab === 'connection' && renderConnectionSettings()}
         </div>

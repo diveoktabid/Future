@@ -11,6 +11,7 @@ const Sidebar = ({
   setShowMobileSidebar,
   onDashboardClick,
   onSettingsClick,
+  onLogSistemClick,
   onLogoutClick
 }) => {
   // Handle sidebar toggle
@@ -148,6 +149,18 @@ const Sidebar = ({
         >
           <div className="menu-icon">📊</div>
           {(!sidebarCollapsed || isMobile) && <span>Dashboard</span>}
+        </div>
+        <div 
+          className={`menu-item ${currentView === 'log-sistem' ? 'active' : ''}`}
+          onClick={() => {
+            onLogSistemClick();
+            if (isMobile) setShowMobileSidebar(false);
+          }}
+          style={{ cursor: 'pointer' }}
+          title="Log Sistem"
+        >
+          <div className="menu-icon">📋</div>
+          {(!sidebarCollapsed || isMobile) && <span>Log Sistem</span>}
         </div>
         <div 
           className={`menu-item ${currentView === 'settings' ? 'active' : ''}`}

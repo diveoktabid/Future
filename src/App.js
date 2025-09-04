@@ -14,13 +14,36 @@ import "./App.css";
 const useAuth = () => {
   const [user, setUser] = useLocalStorage("bartech_user", null);
   const [isLoading, setIsLoading] = useState(true);
+  const [loadingMessage, setLoadingMessage] = useState("Checking authentication...");
 
   useEffect(() => {
-    // Simulate auth check
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 1000);
-  }, []);
+    // Quick auth check with improved UX
+    const checkAuth = async () => {
+      try {
+        // First, set a quick loading message
+        setLoadingMessage("Checking authentication...");
+        
+        // Minimal delay for smooth UX - just enough to avoid flash
+        await new Promise(resolve => setTimeout(resolve, 200));
+        
+        // If user exists, verify and load faster
+        if (user) {
+          setLoadingMessage("Loading dashboard...");
+          await new Promise(resolve => setTimeout(resolve, 100));
+        } else {
+          setLoadingMessage("Preparing login...");
+          await new Promise(resolve => setTimeout(resolve, 100));
+        }
+        
+        setIsLoading(false);
+      } catch (error) {
+        console.error("Auth check error:", error);
+        setIsLoading(false);
+      }
+    };
+
+    checkAuth();
+  }, [user]);
 
   const login = (userData) => {
     setUser(userData);
@@ -30,11 +53,11 @@ const useAuth = () => {
     setUser(null);
   };
 
-  return { user, isLoading, login, logout };
+  return { user, isLoading, login, logout, loadingMessage };
 };
 
 // Loading component
-const LoadingScreen = () => (
+const LoadingScreen = ({ message = "Loading..." }) => (
   <div className="loading-screen">
     <div className="loading-container">
       <div className="logo-container">
@@ -72,7 +95,7 @@ const LoadingScreen = () => (
         <p>IoT Monitoring Dashboard</p>
       </div>
       <div className="loading-spinner"></div>
-      <p className="loading-text">Initializing system...</p>
+      <p className="loading-text">{message}</p>
     </div>
   </div>
 );
@@ -100,7 +123,7 @@ const ForgotPasswordScreen = ({ onBackToLogin }) => {
 
 // Main App Component
 const App = () => {
-  const { user, isLoading, login, logout } = useAuth();
+  const { user, isLoading, login, logout, loadingMessage } = useAuth();
   const [currentView, setCurrentView] = useState("login"); // "login", "register", or "forgot-password"
 
   // Check if we should show modal test
@@ -124,9 +147,9 @@ const App = () => {
     return <ModalTest />;
   }
 
-  // Show loading screen
+  // Show loading screen with dynamic message
   if (isLoading) {
-    return <LoadingScreen />;
+    return <LoadingScreen message={loadingMessage} />;
   }
 
   // Show login or register if not authenticated
@@ -150,7 +173,9 @@ const App = () => {
   return (
     <SettingsProvider>
       <div className="app">
-        <Dashboard onLogout={logout} />
+        <div className="app-content">
+          <Dashboard onLogout={logout} />
+        </div>
       </div>
     </SettingsProvider>
   );

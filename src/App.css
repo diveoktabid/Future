@@ -8,6 +8,10 @@
   overflow-x: hidden;
 }
 
+.app-content {
+  animation: fadeInContent 0.4s ease-out;
+}
+
 /* Loading Screen */
 .loading-screen {
   position: fixed;
@@ -22,6 +26,7 @@
   z-index: 9999;
   margin: 0;
   padding: 0;
+  animation: fadeIn 0.3s ease-out;
 }
 
 .loading-container {
@@ -32,7 +37,7 @@
   text-align: center;
   color: var(--white);
   padding: 2rem;
-  animation: fadeInUp 0.6s ease-out;
+  animation: fadeInUp 0.5s ease-out;
 }
 
 .logo-container {
@@ -86,13 +91,24 @@
 
 .loading-text {
   font-size: 1rem;
-  opacity: 0.8;
+  opacity: 0.9;
   margin: 0;
   font-weight: 500;
-  animation: pulse 2s ease-in-out infinite 0.6s;
+  animation: textPulse 1.5s ease-in-out infinite;
+  min-height: 1.5rem;
+  transition: all 0.3s ease;
 }
 
 /* Animations */
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
 @keyframes spin {
   0% {
     transform: rotate(0deg);
@@ -111,6 +127,27 @@
   50% {
     opacity: 1;
     transform: scale(1.02);
+  }
+}
+
+@keyframes textPulse {
+  0%,
+  100% {
+    opacity: 0.9;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInContent {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
