@@ -1,8 +1,60 @@
 /* HospitalManagement.css */
+@import '../styles/theme.css';
+
+/* Animation keyframes */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInFromTop {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-30px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes inputFocus {
+  from {
+    box-shadow: 0 2px 4px rgba(168, 216, 168, 0.1);
+  }
+  to {
+    box-shadow: 
+      0 0 0 3px rgba(76, 175, 80, 0.15),
+      0 4px 8px rgba(168, 216, 168, 0.2);
+  }
+}
+
 .hospital-management {
+  margin-top: 2rem;
+  background: #ffffff;
+  border-radius: 12px;
   padding: 2rem;
-  background: var(--bg-primary);
-  min-height: 100vh;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  border: 1px solid #f0f0f0;
+  animation: fadeInUp 0.6s ease-out;
 }
 
 .hospital-management-header {
@@ -12,13 +64,16 @@
   margin-bottom: 2rem;
   flex-wrap: wrap;
   gap: 1rem;
+  border-bottom: 3px solid #a8d8a8;
+  padding-bottom: 1rem;
 }
 
 .hospital-management-header h1 {
-  color: var(--text-primary);
-  font-size: 2rem;
-  font-weight: 600;
+  color: #2d5a2d;
+  font-size: 1.75rem;
+  font-weight: 700;
   margin: 0;
+  animation: slideInFromTop 0.8s ease-out;
 }
 
 .add-hospital-btn {
@@ -26,25 +81,33 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.75rem 1.5rem;
-  background: var(--primary-color);
+  background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
   color: white;
   border: none;
   border-radius: 8px;
   font-size: 1rem;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
 }
 
 .add-hospital-btn:hover {
-  background: var(--primary-hover);
+  background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+  box-shadow: 0 4px 16px rgba(76, 175, 80, 0.4);
 }
 
 .add-icon {
   font-size: 1.2rem;
   font-weight: bold;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* Loading */
@@ -60,19 +123,25 @@
 .loading-spinner {
   width: 40px;
   height: 40px;
-  border: 4px solid var(--border-color);
-  border-top: 4px solid var(--primary-color);
+  border: 4px solid #e0e0e0;
+  border-top: 4px solid #4caf50;
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
 
+.loading-container p {
+  color: #2d5a2d;
+  font-weight: 500;
+}
+
 /* Table */
 .hospitals-table-container {
-  background: var(--bg-secondary);
+  background: #ffffff;
   border-radius: 12px;
   overflow: hidden;
-  border: 1px solid var(--border-color);
+  border: 1px solid #e0e0e0;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  animation: fadeInUp 0.8s ease-out;
 }
 
 .hospitals-table {
@@ -81,26 +150,29 @@
 }
 
 .hospitals-table th {
-  background: var(--bg-tertiary);
-  color: var(--text-primary);
+  background: #a8d8a8;
+  color: #2d5a2d;
   padding: 1rem;
   text-align: left;
-  font-weight: 600;
+  font-weight: 700;
   font-size: 0.9rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 2px solid #4caf50;
 }
 
 .hospitals-table td {
   padding: 1rem;
-  border-bottom: 1px solid var(--border-color);
-  color: var(--text-secondary);
+  border-bottom: 1px solid #e0e0e0;
+  color: #495057;
   vertical-align: middle;
+  transition: background-color 0.3s ease;
 }
 
 .hospitals-table tbody tr:hover {
-  background: var(--bg-hover);
+  background: #f8f9fa;
+  transform: scale(1.001);
+  transition: all 0.3s ease;
 }
 
 .hospitals-table tbody tr:last-child td {
@@ -108,8 +180,9 @@
 }
 
 .hospital-name {
-  font-weight: 600;
-  color: var(--text-primary);
+  font-weight: 700;
+  color: #2d5a2d;
+  font-size: 1rem;
 }
 
 .hospital-address {
@@ -117,70 +190,88 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  color: #6c757d;
+}
+
+.hospital-phone {
+  color: #495057;
+  font-weight: 500;
+}
+
+.hospital-email {
+  color: #495057;
+  font-style: italic;
 }
 
 .hospital-status .status-badge {
-  padding: 0.25rem 0.75rem;
+  padding: 0.375rem 0.875rem;
   border-radius: 20px;
   font-size: 0.85rem;
-  font-weight: 500;
+  font-weight: 600;
   text-transform: capitalize;
+  letter-spacing: 0.02em;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .hospital-status .status-badge.active {
-  background: var(--success-color);
+  background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
   color: white;
 }
 
 .hospital-status .status-badge.inactive {
-  background: var(--text-muted);
+  background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
   color: white;
 }
 
 .hospital-actions {
   display: flex;
   gap: 0.5rem;
+  align-items: center;
 }
 
 .edit-btn, .delete-btn {
   padding: 0.5rem;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
   transition: all 0.3s ease;
   font-size: 1rem;
-  min-width: 36px;
-  height: 36px;
+  min-width: 38px;
+  height: 38px;
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .edit-btn {
-  background: var(--success-color);
+  background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
   color: white;
 }
 
 .edit-btn:hover {
-  background: var(--success-hover);
-  transform: translateY(-1px);
+  background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(76, 175, 80, 0.3);
 }
 
 .delete-btn {
-  background: var(--danger-color);
+  background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
   color: white;
 }
 
 .delete-btn:hover {
-  background: var(--danger-hover);
-  transform: translateY(-1px);
+  background: linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(244, 67, 54, 0.3);
 }
 
 .no-data {
   text-align: center;
   padding: 3rem 1rem;
-  color: var(--text-muted);
+  color: #6c757d;
   font-style: italic;
+  font-size: 1.1rem;
 }
 
 /* Modal */
@@ -190,193 +281,288 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(45, 90, 45, 0.85);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
   padding: 1rem;
+  backdrop-filter: blur(4px);
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 .modal-content {
-  background: var(--bg-secondary);
-  border-radius: 12px;
+  background: #ffffff;
+  border-radius: 16px;
   width: 100%;
   max-width: 600px;
   max-height: 90vh;
   overflow-y: auto;
-  border: 1px solid var(--border-color);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  border: none;
+  box-shadow: 
+    0 25px 50px rgba(45, 90, 45, 0.3),
+    0 0 0 1px rgba(168, 216, 168, 0.3);
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 .modal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1.5rem;
-  border-bottom: 1px solid var(--border-color);
+  padding: 1.5rem 2rem 0.5rem 2rem;
+  border-bottom: none;
+  background: #ffffff;
+  border-radius: 16px 16px 0 0;
 }
 
 .modal-header h2 {
-  color: var(--text-primary);
+  color: #2d5a2d;
   margin: 0;
-  font-size: 1.5rem;
-  font-weight: 600;
+  font-size: 1.4rem;
+  font-weight: 700;
+  text-align: center;
+  width: 100%;
 }
 
 .close-btn {
-  background: none;
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: rgba(244, 67, 54, 0.1);
   border: none;
-  font-size: 1.5rem;
-  color: var(--text-secondary);
+  font-size: 1.4rem;
+  color: #666;
   cursor: pointer;
-  padding: 0.25rem;
-  border-radius: 4px;
+  padding: 0.4rem;
+  border-radius: 50%;
   transition: all 0.3s ease;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
 }
 
 .close-btn:hover {
-  background: var(--bg-hover);
-  color: var(--text-primary);
+  background: rgba(244, 67, 54, 0.2);
+  color: #f44336;
+  transform: scale(1.1);
 }
 
 /* Form */
 .hospital-form {
-  padding: 1.5rem;
+  padding: 1.5rem 2rem 2rem 2rem;
+  background: #ffffff;
 }
 
 .form-group {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
+  position: relative;
 }
 
 .form-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1rem;
+  align-items: start;
 }
 
 .form-group label {
   display: block;
-  margin-bottom: 0.5rem;
-  color: var(--text-primary);
-  font-weight: 500;
-  font-size: 0.9rem;
+  margin-bottom: 0.4rem;
+  color: #2d5a2d;
+  font-weight: 600;
+  font-size: 0.95rem;
+  letter-spacing: 0.02em;
+  line-height: 1.4;
+  text-align: center;
 }
 
 .form-group input,
 .form-group textarea {
   width: 100%;
-  padding: 0.75rem;
-  border: 1px solid var(--border-color);
+  padding: 0.75rem 0.875rem;
+  border: 2px solid #e8f4e8;
   border-radius: 8px;
-  background: var(--bg-primary);
-  color: var(--text-primary);
-  font-size: 1rem;
+  background: #fafffe;
+  color: #2d3436;
+  font-size: 0.95rem;
+  line-height: 1.4;
   transition: all 0.3s ease;
   box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  box-shadow: 0 2px 4px rgba(168, 216, 168, 0.1);
+  resize: none;
+  text-align: left;
 }
 
 .form-group input:focus,
 .form-group textarea:focus {
   outline: none;
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  border-color: #4caf50;
+  box-shadow: 
+    0 0 0 3px rgba(76, 175, 80, 0.15),
+    0 4px 8px rgba(168, 216, 168, 0.2);
+  background: #ffffff;
+  transform: translateY(-1px);
+  animation: inputFocus 0.3s ease-out;
 }
 
 .form-group textarea {
   resize: vertical;
   min-height: 80px;
+  line-height: 1.5;
+  padding: 0.75rem 0.875rem;
+  text-align: left;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: #b0bec5;
+  font-style: italic;
+  font-weight: 400;
+  text-align: left;
 }
 
 .form-actions {
   display: flex;
   gap: 1rem;
-  justify-content: flex-end;
-  margin-top: 2rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--border-color);
+  justify-content: center;
+  margin-top: 1.5rem;
+  padding-top: 1.2rem;
+  border-top: 2px solid #f0f8f0;
 }
 
 .cancel-btn,
 .submit-btn,
 .delete-confirm-btn {
-  padding: 0.75rem 1.5rem;
+  padding: 0.875rem 1.5rem;
   border: none;
   border-radius: 8px;
-  font-size: 1rem;
-  font-weight: 500;
+  font-size: 0.95rem;
+  font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  min-width: 120px;
+  min-width: 140px;
+  letter-spacing: 0.02em;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .cancel-btn {
-  background: var(--bg-tertiary);
-  color: var(--text-secondary);
-  border: 1px solid var(--border-color);
+  background: #f8f9fa;
+  color: #6c757d;
+  border: 2px solid #e9ecef;
 }
 
 .cancel-btn:hover {
-  background: var(--bg-hover);
-  color: var(--text-primary);
+  background: #e9ecef;
+  color: #495057;
+  border-color: #ced4da;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
 .submit-btn {
-  background: var(--primary-color);
+  background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
   color: white;
+  border: 2px solid transparent;
 }
 
 .submit-btn:hover {
-  background: var(--primary-hover);
-  transform: translateY(-1px);
+  background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(76, 175, 80, 0.4);
 }
 
 .delete-confirm-btn {
-  background: var(--danger-color);
+  background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
   color: white;
+  border: 2px solid transparent;
 }
 
 .delete-confirm-btn:hover {
-  background: var(--danger-hover);
-  transform: translateY(-1px);
+  background: linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(244, 67, 54, 0.4);
 }
 
 /* Delete Modal */
 .delete-modal {
-  max-width: 500px;
+  max-width: 520px;
 }
 
 .delete-content {
-  padding: 1.5rem;
+  padding: 2.5rem 2rem;
   text-align: center;
+  background: linear-gradient(135deg, #fff8f8 0%, #ffebee 100%);
+  border-radius: 0 0 16px 16px;
 }
 
 .warning-icon {
-  font-size: 3rem;
-  margin-bottom: 1rem;
+  font-size: 4.5rem;
+  margin-bottom: 1.5rem;
+  animation: pulse 2s infinite;
+  filter: drop-shadow(0 4px 8px rgba(255, 152, 0, 0.3));
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
 }
 
 .delete-content p {
-  color: var(--text-primary);
+  color: #2d5a2d;
   margin-bottom: 1rem;
   font-size: 1.1rem;
-  line-height: 1.5;
+  line-height: 1.6;
+  font-weight: 500;
+}
+
+.delete-content p strong {
+  color: #d32f2f;
+  font-weight: 700;
 }
 
 .warning-text {
-  color: var(--text-secondary);
+  color: #dc2626;
   font-size: 0.95rem;
+  font-weight: 500;
+  background: rgba(220, 38, 38, 0.1);
+  padding: 0.75rem;
+  border-radius: 8px;
+  border-left: 4px solid #dc2626;
+  margin-top: 1rem;
 }
 
 /* Responsive */
 @media (max-width: 768px) {
   .hospital-management {
-    padding: 1rem;
+    margin-top: 1rem;
+    padding: 1.5rem;
+    border-radius: 8px;
   }
 
   .hospital-management-header {
     flex-direction: column;
     align-items: stretch;
+    text-align: center;
   }
 
   .hospital-management-header h1 {
@@ -385,10 +571,12 @@
 
   .add-hospital-btn {
     justify-content: center;
+    padding: 1rem 1.5rem;
   }
 
   .hospitals-table-container {
     overflow-x: auto;
+    border-radius: 8px;
   }
 
   .hospitals-table {
@@ -397,41 +585,113 @@
 
   .form-row {
     grid-template-columns: 1fr;
+    gap: 1rem;
   }
 
   .modal-content {
     margin: 0.5rem;
     max-height: 95vh;
+    border-radius: 12px;
+    max-width: 95%;
+  }
+
+  .modal-header {
+    padding: 1.2rem 1.5rem 0.5rem 1.5rem;
+  }
+
+  .hospital-form {
+    padding: 1rem 1.5rem 1.2rem 1.5rem;
+  }
+
+  .form-group {
+    margin-bottom: 1rem;
+  }
+
+  .form-group label {
+    font-size: 0.9rem;
+    margin-bottom: 0.3rem;
+  }
+
+  .form-group input,
+  .form-group textarea {
+    padding: 0.75rem;
+    font-size: 0.9rem;
   }
 
   .form-actions {
     flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 1.2rem;
+    padding-top: 1rem;
   }
 
   .cancel-btn,
   .submit-btn,
   .delete-confirm-btn {
     width: 100%;
+    padding: 0.875rem;
+    min-width: auto;
   }
 }
 
 @media (max-width: 480px) {
+  .hospital-management {
+    margin-top: 0.5rem;
+    padding: 1rem;
+  }
+
   .hospital-management-header h1 {
-    font-size: 1.3rem;
+    font-size: 1.4rem;
   }
 
   .modal-header {
-    padding: 1rem;
+    padding: 1rem 1.2rem 0.5rem 1.2rem;
+  }
+
+  .modal-header h2 {
+    font-size: 1.2rem;
   }
 
   .hospital-form {
-    padding: 1rem;
+    padding: 1rem 1.2rem 1.2rem 1.2rem;
   }
 
   .hospitals-table th,
   .hospitals-table td {
     padding: 0.75rem 0.5rem;
     font-size: 0.9rem;
+  }
+
+  .add-hospital-btn {
+    padding: 0.875rem 1.25rem;
+    font-size: 0.95rem;
+  }
+
+  .hospital-management-header {
+    gap: 0.75rem;
+  }
+
+  .close-btn {
+    top: 1rem;
+    right: 1rem;
+    width: 36px;
+    height: 36px;
+    font-size: 1.3rem;
+  }
+
+  .form-group {
+    margin-bottom: 0.875rem;
+  }
+
+  .form-group input,
+  .form-group textarea {
+    padding: 0.7rem;
+    font-size: 0.9rem;
+  }
+
+  .form-group label {
+    font-size: 0.85rem;
+    margin-bottom: 0.3rem;
   }
 }
 
@@ -443,4 +703,108 @@
   100% {
     transform: rotate(360deg);
   }
+}
+
+/* Typography Consistency */
+.hospital-form * {
+  box-sizing: border-box;
+}
+
+.form-section {
+  margin-bottom: 2rem;
+}
+
+.form-section:last-child {
+  margin-bottom: 0;
+}
+
+/* Enhanced Field Focus States */
+.form-group:focus-within label {
+  color: #2e7d32;
+  transform: translateY(-1px);
+  transition: all 0.3s ease;
+}
+
+/* Improved Text Rendering */
+.form-group input,
+.form-group textarea,
+.form-group label {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Additional Utility Classes */
+.form-field-required::after {
+  content: ' *';
+  color: #f44336;
+  font-weight: bold;
+  margin-left: 2px;
+}
+
+.modal-content.modal-entering {
+  animation: modalSlideIn 0.4s ease-out;
+}
+
+/* Form Validation Styling */
+.form-group input:invalid:not(:focus):not(:placeholder-shown),
+.form-group textarea:invalid:not(:focus):not(:placeholder-shown) {
+  border-color: #f44336;
+  box-shadow: 0 0 0 2px rgba(244, 67, 54, 0.15);
+  background: #fff8f8;
+}
+
+.form-group input:valid:not(:focus):not(:placeholder-shown),
+.form-group textarea:valid:not(:focus):not(:placeholder-shown) {
+  border-color: #4caf50;
+  box-shadow: 0 0 0 1px rgba(76, 175, 80, 0.2);
+}
+
+/* Custom validation tooltip styling */
+.form-group input:invalid {
+  position: relative;
+}
+
+/* Improve browser validation message appearance */
+.form-group input:invalid:focus:not(:placeholder-shown) {
+  border-color: #f44336;
+  box-shadow: 
+    0 0 0 3px rgba(244, 67, 54, 0.15),
+    0 4px 8px rgba(244, 67, 54, 0.1);
+}
+
+/* Text formatting improvements */
+.form-group label {
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.4rem;
+}
+
+/* Form Visual Enhancements */
+.form-group {
+  position: relative;
+}
+
+.form-group:focus-within label {
+  color: #2e7d32;
+  transform: translateY(-1px);
+  transition: all 0.3s ease;
+}
+
+/* Enhanced Button Hover Effects */
+.submit-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 8px rgba(76, 175, 80, 0.3);
+}
+
+.cancel-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.delete-confirm-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 8px rgba(244, 67, 54, 0.3);
 }
