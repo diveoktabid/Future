@@ -13,18 +13,8 @@ router.get("/:id", devicesController.getDeviceById);
 router.get("/:id/status", devicesController.getDeviceStatus);
 
 // Admin/Technician Routes
-router.post(
-  "/",
-  authorizeRoles("admin", "technician"),
-  validate(schemas.device),
-  devicesController.createDevice
-);
-router.put(
-  "/:id",
-  authorizeRoles("admin", "technician"),
-  validate(schemas.device),
-  devicesController.updateDevice
-);
+router.post("/", authorizeRoles("admin", "technician"), validate(schemas.device), devicesController.createDevice);
+router.put("/:id", authorizeRoles("admin", "technician"), validate(schemas.device), devicesController.updateDevice);
 
 // Admin Only Routes
 router.delete("/:id", authorizeRoles("admin"), devicesController.deleteDevice);

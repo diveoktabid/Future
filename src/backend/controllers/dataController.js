@@ -392,6 +392,89 @@ const deleteDeviceData = async (req, res) => {
   }
 };
 
+// Get All Monitoring Data for Export (by Hospital)
+const getMonitoringDataForExport = async (req, res) => {
+  try {
+    const { hospital_id } = req.params;
+    const { start_date, end_date } = req.query;
+
+    if (!hospital_id) {
+      return res.status(400).json({
+        status: "error",
+        message: "Hospital ID is required",
+      });
+    }
+
+    // Build date conditions
+    let dateClause = "";
+    let queryParams = [hospital_id];
+
+    if (start_date) {
+      dateClause += " AND m.created_at >= ?";
+      queryParams.push(start_date);
+    }
+
+    if (end_date) {
+      dateClause += " AND m.created_at <= ?";
+      queryParams.push(end_date);
+    }
+
+    // Get all monitoring data for the hospital (no pagination)
+    const exportQuery = `
+      SELECT 
+        m.monitoring_id,
+        m.hospital_id,
+        h.hospital_name,
+        m.temperature,
+        m.humidity,
+        m.gas_status,
+        m.status_lampu1,
+        m.status_lampu2,
+        m.status_viewer,
+        m.status_writing_table,
+        m.status_lampu_op,
+        m.created_at,
+        m.updated_at
+      FROM monitoring_data m
+      JOIN hospital h ON m.hospital_id = h.hospital_id
+      WHERE m.hospital_id = ? ${dateClause}
+      ORDER BY m.created_at DESC
+    `;
+
+    const data = await executeQuery(exportQuery, queryParams);
+
+    // Get hospital info
+    const hospitalInfo = await executeQuery(
+      "SELECT hospital_name, installation_date, installation_time FROM hospital WHERE hospital_id = ?",
+      [hospital_id]
+    );
+
+    if (hospitalInfo.length === 0) {
+      return res.status(404).json({
+        status: "error",
+        message: "Hospital not found",
+      });
+    }
+
+    res.json({
+      status: "success",
+      message: "Monitoring data for export retrieved successfully",
+      data: {
+        hospital: hospitalInfo[0],
+        monitoring_data: data,
+        total_records: data.length,
+        export_date: new Date().toISOString(),
+      },
+    });
+  } catch (error) {
+    console.error("Get monitoring data for export error:", error);
+    res.status(500).json({
+      status: "error",
+      message: "Internal server error while fetching monitoring data for export",
+    });
+  }
+};
+
 // Cleanup Old Data (Admin Only)
 const cleanupOldData = async (req, res) => {
   try {
@@ -438,4 +521,5 @@ module.exports = {
   getDataStatsOverview,
   deleteDeviceData,
   cleanupOldData,
+  getMonitoringDataForExport,
 };

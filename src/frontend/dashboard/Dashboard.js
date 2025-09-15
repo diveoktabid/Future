@@ -56,6 +56,14 @@ const Dashboard = ({ onLogout }) => {
   const historicalDataRef = useRef(historicalData);
   const refreshIntervalRef = useRef(null);
 
+  // Make toast available globally for export service
+  useEffect(() => {
+    window.toast = toast;
+    return () => {
+      delete window.toast;
+    };
+  }, []);
+
   // Update refs when state changes
   useEffect(() => {
     selectedHospitalRef.current = selectedHospital;
