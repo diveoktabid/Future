@@ -35,29 +35,6 @@
   transition: var(--transition);
 }
 
-.settings-header {
-  text-align: center;
-  margin-bottom: 40px;
-  padding: 20px;
-  background: linear-gradient(135deg, var(--settings-primary-green) 0%, var(--settings-secondary-green) 100%);
-  color: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
-}
-
-.settings-header h1 {
-  margin: 0 0 10px 0;
-  font-size: 2.5rem;
-  font-weight: 600;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.settings-header p {
-  margin: 0;
-  font-size: 1.1rem;
-  opacity: 0.9;
-}
-
 .settings-content {
   background: var(--bg-secondary);
   color: var(--text-primary);
@@ -465,10 +442,6 @@
     padding: 15px;
   }
   
-  .settings-header h1 {
-    font-size: 2rem;
-  }
-  
   .settings-tabs {
     flex-direction: column;
   }
@@ -511,19 +484,6 @@
 }
 
 @media (max-width: 480px) {
-  .settings-header {
-    padding: 15px;
-    margin-bottom: 20px;
-  }
-  
-  .settings-header h1 {
-    font-size: 1.8rem;
-  }
-  
-  .settings-header p {
-    font-size: 0.9rem;
-  }
-  
   .unsaved-changes-indicator {
     flex-direction: column;
     text-align: center;
@@ -549,12 +509,6 @@
 
 .btn-primary:active {
   animation: pulse 0.3s ease;
-}
-
-/* Dark theme enhancements */
-.dark-theme .settings-header {
-  background: linear-gradient(135deg, var(--settings-dark-green) 0%, var(--settings-emerald-green) 100%);
-  border: 1px solid var(--border-color);
 }
 
 .dark-theme .tab:not(.active):hover {

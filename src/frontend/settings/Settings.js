@@ -272,17 +272,6 @@ const Settings = () => {
           Tampilan Kompak
         </label>
       </div>
-
-      <div className="setting-item checkbox-item">
-        <label className="checkbox-label">
-          <input
-            type="checkbox"
-            checked={settings.darkMode}
-            onChange={(e) => handleInputChange('darkMode', e.target.checked)}
-          />
-          Mode Gelap
-        </label>
-      </div>
     </div>
   );
 
@@ -331,11 +320,6 @@ const Settings = () => {
 
   return (
     <div className="settings-container">
-      <div className="settings-header">
-        <h1>⚙️ Pengaturan Sistem</h1>
-        <p>Kelola pengaturan monitoring IoT sesuai kebutuhan Anda</p>
-      </div>
-
       <div className="settings-content">
         <div className="settings-tabs">
           <button 

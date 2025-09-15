@@ -439,10 +439,11 @@ const createHospital = async (req, res) => {
         capacity, 
         description,
         installation_date,
+        installation_time,
         iot_status,
         is_active,
         created_at
-      ) VALUES (?, ?, ?, ?, ?, ?, CURDATE(), 'inactive', 1, NOW())
+      ) VALUES (?, ?, ?, ?, ?, ?, CURDATE(), TIME(NOW()), 'Mati', 1, NOW())
     `;
 
     const result = await executeQuery(insertQuery, [
