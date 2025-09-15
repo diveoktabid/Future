@@ -15,6 +15,7 @@ const userRoutes = require("./routes/users");
 const deviceRoutes = require("./routes/devices");
 const dataRoutes = require("./routes/data");
 const hospitalRoutes = require("./routes/hospitals");
+const hospitalManagementRoutes = require("./routes/hospitalManagement");
 
 // Import new real-time monitoring routes (BARU)
 const monitoringRoutes = require("./routes/monitoring");
@@ -187,6 +188,7 @@ app.use("/api/users", authenticateToken, userRoutes);
 app.use("/api/devices", authenticateToken, deviceRoutes);
 app.use("/api/data", authenticateToken, dataRoutes);
 app.use("/api/hospitals", authenticateToken, hospitalRoutes);
+app.use("/api/hospital-management", hospitalManagementRoutes);
 
 // New Real-time Monitoring Routes (BARU - TANPA AUTH untuk IoT)
 app.use("/api/monitoring", monitoringRoutes);
