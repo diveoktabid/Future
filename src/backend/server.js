@@ -7,7 +7,7 @@ const rateLimit = require("express-rate-limit");
 const path = require("path");
 const http = require("http");
 const socketIo = require("socket.io");
-require("dotenv").config({ path: path.join(__dirname, '.env') });
+require("dotenv").config({ path: path.join(__dirname, '../../.env') });
 
 // Import routes
 const authRoutes = require("./routes/auth");
