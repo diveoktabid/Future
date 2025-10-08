@@ -43,16 +43,8 @@ const LoginSuccessModal = ({ isOpen, onClose, userName, onContinue }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="modal-overlay" onClick={handleOverlayClick}>
+    <div className="modal-overlay-login" onClick={handleOverlayClick}>
       <div className="modal-container">
-        {/* Close Button */}
-        <button
-          onClick={onClose}
-          className="modal-close-btn"
-          aria-label="Close modal">
-          ×
-        </button>
-
         {/* Modal Content */}
         <div className="modal-content">
           {/* Success Icon */}
@@ -79,8 +71,15 @@ const LoginSuccessModal = ({ isOpen, onClose, userName, onContinue }) => {
           {/* Subtitle */}
           <p className="modal-subtitle">Login berhasil dilakukan</p>
 
-          {/* Welcome Message */}
+          {/* Welcome Message with User Info */}
           <p className="welcome-message">Halo, {userName || "User"}!</p>
+          
+          {/* Additional Success Info */}
+          <div className="success-info">
+            <p className="success-detail">Anda telah berhasil masuk ke sistem</p>
+            <p className="success-detail">Silakan lanjutkan ke dashboard untuk mulai menggunakan aplikasi</p>
+          </div>
+          
           {/* Continue Button */}
           <button onClick={onContinue} className="continue-btn">
             Lanjutkan ke Dashboard

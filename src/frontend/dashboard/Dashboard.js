@@ -798,7 +798,7 @@ const Dashboard = ({ onLogout }) => {
 
       {/* Logout Confirmation Modal */}
       {showLogoutModal && (
-        <div className="modal-overlay">
+        <div className="modal-overlay-logout">
           <div className="modal-content">
             <div className="modal-header">
               <h3>Konfirmasi Logout</h3>

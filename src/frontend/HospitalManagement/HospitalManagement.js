@@ -98,7 +98,7 @@ const HospitalManagement = () => {
 
       {/* Add Hospital Modal */}
       {modals.showAdd && (
-        <div className="modal-overlay" onClick={closeModals}>
+        <div className="modal-overlay-hospital" onClick={closeModals}>
           <div className="modal-content modal-entering" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
               <h2>Tambah Rumah Sakit Baru</h2>

@@ -31,12 +31,9 @@ const Settings = () => {
   const handleSave = () => {
     try {
       // Settings are already saved automatically in SettingsContext
-      // This function provides user feedback and applies theme changes
+      // This function provides user feedback and applies display changes
       
-      // Apply theme changes immediately
-      applyThemeChanges();
-      
-      // Apply display changes
+      // Apply display changes immediately
       applyDisplayChanges();
       
       // Update original settings to current settings
@@ -72,9 +69,6 @@ const Settings = () => {
         
         console.log('🔄 Settings reset to default');
         
-        // Apply default theme
-        applyThemeChanges(true);
-        
         setTimeout(() => setIsReset(false), 3000);
         
         if (window.toast) {
@@ -89,37 +83,6 @@ const Settings = () => {
       }
     }
   };
-
-  // Apply theme changes to document
-  const applyThemeChanges = useCallback((useDefault = false) => {
-    const root = document.documentElement;
-    const currentSettings = useDefault ? { theme: 'light', darkMode: false } : settings;
-    
-    // Remove existing theme classes
-    root.classList.remove('dark-theme', 'light-theme', 'auto-theme');
-    
-    // Apply theme based on settings
-    if (currentSettings.darkMode || currentSettings.theme === 'dark') {
-      root.classList.add('dark-theme');
-      document.body.style.background = 'var(--bg-dark, #1a1a1a)';
-      document.body.style.color = 'var(--text-dark, #ffffff)';
-    } else if (currentSettings.theme === 'auto') {
-      // Auto theme based on system preference
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      if (prefersDark) {
-        root.classList.add('dark-theme');
-      } else {
-        root.classList.add('light-theme');
-      }
-    } else {
-      // Light theme
-      root.classList.add('light-theme');
-      document.body.style.background = 'var(--bg-light, #ffffff)';
-      document.body.style.color = 'var(--text-light, #000000)';
-    }
-    
-    console.log(`🎨 Theme applied: ${currentSettings.theme}, Dark Mode: ${currentSettings.darkMode}`);
-  }, [settings]);
 
   // Apply display changes
   const applyDisplayChanges = useCallback(() => {
@@ -140,9 +103,8 @@ const Settings = () => {
 
   // Apply settings on component mount and when settings change
   useEffect(() => {
-    applyThemeChanges();
     applyDisplayChanges();
-  }, [settings.theme, settings.darkMode, settings.compactView, applyThemeChanges, applyDisplayChanges]);
+  }, [settings.compactView, applyDisplayChanges]);
 
   const renderGeneralSettings = () => (
     <div className="settings-section">
@@ -157,18 +119,6 @@ const Settings = () => {
           <option value={10}>10 detik</option>
           <option value={30}>30 detik</option>
           <option value={60}>1 menit</option>
-        </select>
-      </div>
-
-      <div className="setting-item">
-        <label>Tema</label>
-        <select 
-          value={settings.theme}
-          onChange={(e) => handleInputChange('theme', e.target.value)}
-        >
-          <option value="light">Terang</option>
-          <option value="dark">Gelap</option>
-          <option value="auto">Otomatis</option>
         </select>
       </div>
 
@@ -400,8 +350,7 @@ const Settings = () => {
           {/* Settings info */}
           <div className="settings-info">
             <small>
-              Interval refresh saat ini: <strong>{settings.refreshInterval / 1000} detik</strong> | 
-              Tema: <strong>{settings.theme === 'light' ? 'Terang' : settings.theme === 'dark' ? 'Gelap' : 'Otomatis'}</strong> |
+              Interval refresh saat ini: <strong>{settings.refreshInterval / 1000} detik</strong> |
               Status: <strong>{hasUnsavedChanges ? 'Ada perubahan' : 'Tersimpan'}</strong>
             </small>
           </div>

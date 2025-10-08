@@ -3,7 +3,6 @@
   --settings-primary-green: #10b981;
   --settings-secondary-green: #059669;
   --settings-light-green: #d1fae5;
-  --settings-dark-green: #065f46;
   --settings-emerald-green: #047857;
   --settings-green-hover: #34d399;
   --settings-green-light-bg: #ecfdf5;
@@ -172,26 +171,6 @@
   outline: none;
   border-color: var(--settings-primary-green);
   box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
-}
-
-/* Dark theme specific improvements */
-.dark-theme .setting-item select,
-.dark-theme .setting-item input[type="text"],
-.dark-theme .setting-item input[type="number"] {
-  background: var(--bg-secondary);
-  color: var(--text-primary);
-  border-color: var(--border-color);
-}
-
-.dark-theme .setting-item select:focus,
-.dark-theme .setting-item input:focus {
-  border-color: var(--settings-primary-green);
-  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.3);
-}
-
-.dark-theme .setting-item select option {
-  background: var(--bg-secondary);
-  color: var(--text-primary);
 }
 
 .setting-item input[type="range"] {
@@ -511,65 +490,6 @@
   animation: pulse 0.3s ease;
 }
 
-.dark-theme .tab:not(.active):hover {
-  background: var(--bg-tertiary);
-  color: var(--text-secondary);
-}
-
-.dark-theme .btn-secondary {
-  background: var(--bg-tertiary);
-  color: var(--text-primary);
-  border: 1px solid var(--border-color);
-}
-
-.dark-theme .btn-secondary:hover {
-  background: var(--border-color);
-  color: var(--text-primary);
-}
-
-/* Dark mode setting items */
-.dark-theme .setting-item {
-  background: var(--bg-tertiary);
-  border: 1px solid var(--border-color);
-}
-
-.dark-theme .setting-item:hover {
-  border-color: var(--settings-primary-green);
-  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.2);
-}
-
-/* Dark mode checkbox items */
-.dark-theme .setting-item.checkbox-item {
-  background: var(--bg-tertiary);
-  border: 1px solid var(--border-color);
-}
-
-.dark-theme .checkbox-label {
-  color: var(--text-primary);
-}
-
-/* Dark theme untuk range slider */
-.dark-theme .setting-item input[type="range"] {
-  background: linear-gradient(to right, #4a5568 0%, var(--settings-dark-green) 50%, var(--settings-primary-green) 100%);
-  border: 1px solid var(--settings-primary-green);
-}
-
-.dark-theme .setting-item input[type="range"]::-webkit-slider-track {
-  background: linear-gradient(to right, #4a5568 0%, var(--settings-dark-green) 50%, var(--settings-primary-green) 100%);
-  border: 1px solid var(--settings-primary-green);
-}
-
-.dark-theme .setting-item input[type="range"]::-moz-range-track {
-  background: linear-gradient(to right, #4a5568 0%, var(--settings-dark-green) 50%, var(--settings-primary-green) 100%);
-  border: 1px solid var(--settings-primary-green);
-}
-
-.dark-theme .range-value {
-  background: var(--bg-tertiary);
-  color: var(--settings-primary-green);
-  border: 1px solid var(--settings-primary-green);
-}
-
 /* Tooltip styles dengan warna hijau */
 .setting-item[data-tooltip] {
   position: relative;
@@ -588,14 +508,6 @@
   white-space: nowrap;
   z-index: 1000;
   box-shadow: var(--shadow);
-}
-
-/* Dark theme tooltip improvements */
-.dark-theme .setting-item[data-tooltip]:hover::after {
-  background: var(--settings-dark-green);
-  color: white;
-  border: 1px solid var(--settings-primary-green);
-  box-shadow: var(--shadow-lg);
 }
 
 /* Styling untuk success/save state */

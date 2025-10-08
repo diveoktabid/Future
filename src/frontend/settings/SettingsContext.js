@@ -13,7 +13,6 @@ export const useSettings = () => {
 const defaultSettings = {
   // General Settings
   refreshInterval: 5000,
-  theme: 'light',
   language: 'id',
   timezone: 'Asia/Jakarta',
   
@@ -33,7 +32,6 @@ const defaultSettings = {
   showDeviceStatus: true,
   showLastUpdate: true,
   compactView: false,
-  darkMode: false,
   
   // Connection Settings
   autoReconnect: true,
@@ -56,26 +54,6 @@ export const SettingsProvider = ({ children }) => {
       }
     }
   }, []);
-
-  // Apply theme changes immediately
-  useEffect(() => {
-    const root = document.documentElement;
-    if (settings.darkMode) {
-      root.classList.add('dark-theme');
-    } else {
-      root.classList.remove('dark-theme');
-    }
-  }, [settings.darkMode]);
-
-  // Apply theme color changes
-  useEffect(() => {
-    const root = document.documentElement;
-    if (settings.theme === 'dark') {
-      root.classList.add('dark-theme');
-    } else {
-      root.classList.remove('dark-theme');
-    }
-  }, [settings.theme]);
 
   const updateSetting = (key, value) => {
     setSettings(prev => {

@@ -1,14 +1,14 @@
-.modal-overlay {
+.modal-overlay-login {
   position: fixed;
   top: 0;
-  left: 0;
+  left: -15%;
   right: 0;
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 40px;
+  padding: 20px;
   z-index: 1000;
 }
 
@@ -19,7 +19,6 @@
   width: 100%;
   position: relative;
   animation: modalSlideIn 0.4s ease-out;
-  margin: auto;
 }
 
 .modal-content {
@@ -29,29 +28,6 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-}
-
-.modal-close-btn {
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  background: rgba(0, 0, 0, 0.05);
-  border: none;
-  font-size: 18px;
-  cursor: pointer;
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s ease;
-  z-index: 10;
-}
-
-.modal-close-btn:hover {
-  background-color: rgba(0, 0, 0, 0.1);
-  color: #333;
 }
 
 .success-icon-wrapper {
@@ -99,7 +75,26 @@
   font-size: 18px;
   font-weight: 600;
   color: #059669;
+  margin: 0 0 16px;
+}
+
+.success-info {
   margin: 0 0 24px;
+  padding: 16px;
+  background: rgba(34, 197, 94, 0.05);
+  border-radius: 12px;
+  border: 1px solid rgba(34, 197, 94, 0.1);
+}
+
+.success-detail {
+  font-size: 14px;
+  color: #374151;
+  margin: 0 0 8px;
+  line-height: 1.5;
+}
+
+.success-detail:last-child {
+  margin-bottom: 0;
 }
 
 .continue-btn {
