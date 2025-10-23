@@ -30,7 +30,7 @@ const { testConnection } = require("./config/database");
 const app = express();
 const server = http.createServer(app);
 
-// Setup Socket.IO dengan CORS (BARU)
+// Setup Socket.IO dengan CORS (UPDATED for better development support)
 const io = socketIo(server, {
   cors: {
     origin: function (origin, callback) {
@@ -38,15 +38,33 @@ const io = socketIo(server, {
         process.env.FRONTEND_URL || "http://localhost:3000",
         "http://localhost:3000",
         "http://127.0.0.1:3000",
+        "http://127.0.0.1:3000",
+        "http://127.0.0.1:3001",
       ];
+      
+      // Allow requests with no origin
       if (!origin) return callback(null, true);
-      if (allowedOrigins.indexOf(origin) !== -1) {
+      
+      // In development, be more permissive
+      if (process.env.NODE_ENV === 'development' || !process.env.NODE_ENV) {
+        if (origin && (origin.includes('localhost') || origin.includes('127.0.0.1'))) {
+          return callback(null, true);
+        }
+        if (origin && origin.startsWith('file://')) {
+          return callback(null, true);
+        }
+        // Allow in development but log
+        console.warn(`🔄 Socket.IO CORS: Allowing origin in development: ${origin}`);
+        callback(null, true);
+      } else if (allowedOrigins.indexOf(origin) !== -1) {
         callback(null, true);
       } else {
+        console.warn(`⚠️  Socket.IO CORS: Rejected origin: ${origin}`);
         callback(new Error("Not allowed by CORS"));
       }
     },
-    methods: ["GET", "POST"],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true
   }
 });
@@ -80,7 +98,7 @@ const limiter = rateLimit({
 
 app.use("/api/", limiter);
 
-// CORS configuration (SAMA SEPERTI SEBELUMNYA)
+// CORS configuration (UPDATED for better development support)
 const corsOptions = {
   origin: function (origin, callback) {
     const allowedOrigins = [
@@ -98,9 +116,13 @@ const corsOptions = {
     // Allow requests with no origin (mobile apps, Postman, etc.)
     if (!origin) return callback(null, true);
 
-    // In development, allow all localhost origins
+    // In development, allow all localhost and 127.0.0.1 origins
     if (process.env.NODE_ENV === 'development' || !process.env.NODE_ENV) {
-      if (origin && origin.includes('localhost')) {
+      if (origin && (origin.includes('localhost') || origin.includes('127.0.0.1'))) {
+        return callback(null, true);
+      }
+      // Also allow file:// protocol for local development
+      if (origin && origin.startsWith('file://')) {
         return callback(null, true);
       }
     }
@@ -108,7 +130,15 @@ const corsOptions = {
     if (allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
-      callback(new Error("Not allowed by CORS"));
+      // Log the rejected origin for debugging
+      console.warn(`⚠️  CORS: Rejected origin: ${origin}`);
+      // In development, still allow but warn; in production, reject
+      if (process.env.NODE_ENV === 'development' || !process.env.NODE_ENV) {
+        console.warn(`🔄 CORS: Allowing in development mode`);
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
     }
   },
   credentials: true,
