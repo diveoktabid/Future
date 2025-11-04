@@ -44,9 +44,9 @@ const LoginSuccessModal = ({ isOpen, onClose, userName, onContinue }) => {
 
   return (
     <div className="modal-overlay-login" onClick={handleOverlayClick}>
-      <div className="modal-container">
+      <div className="modal-container-login-successful">
         {/* Modal Content */}
-        <div className="modal-content">
+        <div className="modal-content-login-successful">
           {/* Success Icon */}
           <div className="success-icon-wrapper">
             <svg

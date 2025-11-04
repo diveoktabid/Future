@@ -321,7 +321,7 @@ body.hospital-modal-open {
   to { opacity: 1; }
 }
 
-.hospital-management .modal-content {
+.hospital-management .modal-content-hospital-management {
   position: relative !important;
   background: #ffffff !important;
   border-radius: 16px;
@@ -410,9 +410,10 @@ body.hospital-modal-open {
   z-index: 1;
 }
 
-.form-group {
+.form-group-hospital-management {
   margin-bottom: 1.25rem;
   position: relative;
+  width: 100%;
 }
 
 .form-row {
@@ -423,7 +424,7 @@ body.hospital-modal-open {
   margin-bottom: 0.75rem;
 }
 
-.form-group label {
+.form-group-hospital-management label {
   display: block;
   margin-bottom: 0.5rem;
   color: #2d5a2d;
@@ -431,7 +432,7 @@ body.hospital-modal-open {
   font-size: 0.9rem;
   letter-spacing: 0.02em;
   line-height: 1.4;
-  text-align: left;
+  text-align: center;
   text-transform: uppercase;
   background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
   background-clip: text;
@@ -442,8 +443,8 @@ body.hospital-modal-open {
   transition: all 0.3s ease;
 }
 
-.form-group input,
-.form-group textarea {
+.form-group-hospital-management input,
+.form-group-hospital-management textarea {
   width: 100%;
   padding: 0.875rem 1rem;
   border: 2px solid #e8f4e8;
@@ -466,8 +467,8 @@ body.hospital-modal-open {
   position: relative;
 }
 
-.form-group input:focus,
-.form-group textarea:focus {
+.form-group-hospital-management input:focus,
+.form-group-hospital-management textarea:focus {
   outline: none;
   border-color: #4caf50;
   box-shadow: 
@@ -481,8 +482,8 @@ body.hospital-modal-open {
   animation: inputFocus 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.form-group input:hover:not(:focus),
-.form-group textarea:hover:not(:focus) {
+.form-group-hospital-management input:hover:not(:focus),
+.form-group-hospital-management textarea:hover:not(:focus) {
   border-color: #c8e6c9;
   box-shadow: 
     0 4px 8px rgba(0, 0, 0, 0.08),
@@ -492,7 +493,7 @@ body.hospital-modal-open {
   transform: translateY(-1px);
 }
 
-.form-group textarea {
+.form-group-hospital-management textarea {
   resize: vertical;
   min-height: 90px;
   line-height: 1.6;
@@ -501,8 +502,8 @@ body.hospital-modal-open {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
-.form-group input::placeholder,
-.form-group textarea::placeholder {
+.form-group-hospital-management input::placeholder,
+.form-group-hospital-management textarea::placeholder {
   color: #90a4ae;
   font-style: italic;
   font-weight: 400;
@@ -512,15 +513,15 @@ body.hospital-modal-open {
   transition: all 0.3s ease;
 }
 
-.form-group input:focus::placeholder,
-.form-group textarea:focus::placeholder {
+.form-group-hospital-management input:focus::placeholder,
+.form-group-hospital-management textarea:focus::placeholder {
   opacity: 0.5;
   transform: translateX(4px);
 }
 
 /* Enhanced Input States */
-.form-group input:disabled,
-.form-group textarea:disabled {
+.form-group-hospital-management input:disabled,
+.form-group-hospital-management textarea:disabled {
   background: linear-gradient(135deg, #f5f5f5 0%, #eeeeee 100%);
   color: #9e9e9e;
   border-color: #e0e0e0;
@@ -530,8 +531,8 @@ body.hospital-modal-open {
   cursor: not-allowed;
 }
 
-.form-group input:read-only,
-.form-group textarea:read-only {
+.form-group-hospital-management input:read-only,
+.form-group-hospital-management textarea:read-only {
   background: linear-gradient(135deg, #fafafa 0%, #f0f0f0 100%);
   border-color: #e8e8e8;
   box-shadow: 
@@ -725,17 +726,17 @@ body.hospital-modal-open {
     gap: 1rem;
   }
 
-  .form-group {
+  .form-group-hospital-management {
     margin-bottom: 1.5rem;
   }
 
-  .form-group label {
+  .form-group-hospital-management label {
     font-size: 1rem;
     margin-bottom: 0.5rem;
   }
 
-  .form-group input,
-  .form-group textarea {
+  .form-group-hospital-management input,
+  .form-group-hospital-management textarea {
     padding: 1rem 1.25rem;
     font-size: 1rem;
   }
@@ -749,8 +750,8 @@ body.hospital-modal-open {
     padding-bottom: 1.5rem;
   }
 
-  .form-group input,
-  .form-group textarea {
+  .form-group-hospital-management input,
+  .form-group-hospital-management textarea {
     padding: 0.75rem;
     font-size: 0.9rem;
   }
@@ -817,17 +818,17 @@ body.hospital-modal-open {
     display: none; /* Keep hidden on mobile too */
   }
 
-  .hospital-management .form-group {
+  .hospital-management .form-group-hospital-management {
     margin-bottom: 0.875rem;
   }
 
-  .hospital-management .form-group input,
-  .hospital-management .form-group textarea {
+  .hospital-management .form-group-hospital-management input,
+  .hospital-management .form-group-hospital-management textarea {
     padding: 0.8rem 0.9rem;
     font-size: 0.9rem;
   }
 
-  .hospital-management .form-group label {
+  .hospital-management .form-group-hospital-management label {
     font-size: 0.85rem;
     margin-bottom: 0.35rem;
   }
@@ -857,18 +858,18 @@ body.hospital-modal-open {
 }
 
 /* Enhanced Field Focus States */
-.form-group:focus-within label {
+.form-group-hospital-management:focus-within label {
   color: #2e7d32;
   transform: translateY(-1px);
   transition: all 0.3s ease;
   filter: drop-shadow(0 2px 4px rgba(45, 90, 45, 0.3));
 }
 
-.form-group:focus-within {
+.form-group-hospital-management:focus-within {
   position: relative;
 }
 
-.form-group:focus-within::before {
+.form-group-hospital-management:focus-within::before {
   content: '';
   position: absolute;
   top: -8px;
@@ -889,9 +890,9 @@ body.hospital-modal-open {
 }
 
 /* Improved Text Rendering */
-.form-group input,
-.form-group textarea,
-.form-group label {
+.form-group-hospital-management input,
+.form-group-hospital-management textarea,
+.form-group-hospital-management label {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
@@ -912,26 +913,26 @@ body.hospital-modal-open {
 }
 
 /* Form Validation Styling */
-.form-group input:invalid:not(:focus):not(:placeholder-shown),
-.form-group textarea:invalid:not(:focus):not(:placeholder-shown) {
+.form-group-hospital-management input:invalid:not(:focus):not(:placeholder-shown),
+.form-group-hospital-management textarea:invalid:not(:focus):not(:placeholder-shown) {
   border-color: #f44336;
   box-shadow: 0 0 0 2px rgba(244, 67, 54, 0.15);
   background: #fff8f8;
 }
 
-.form-group input:valid:not(:focus):not(:placeholder-shown),
-.form-group textarea:valid:not(:focus):not(:placeholder-shown) {
+.form-group-hospital-management input:valid:not(:focus):not(:placeholder-shown),
+.form-group-hospital-management textarea:valid:not(:focus):not(:placeholder-shown) {
   border-color: #4caf50;
   box-shadow: 0 0 0 1px rgba(76, 175, 80, 0.2);
 }
 
 /* Custom validation tooltip styling */
-.form-group input:invalid {
+.form-group-hospital-management input:invalid {
   position: relative;
 }
 
 /* Improve browser validation message appearance */
-.form-group input:invalid:focus:not(:placeholder-shown) {
+.form-group-hospital-management input:invalid:focus:not(:placeholder-shown) {
   border-color: #f44336;
   box-shadow: 
     0 0 0 3px rgba(244, 67, 54, 0.15),
@@ -939,7 +940,7 @@ body.hospital-modal-open {
 }
 
 /* Text formatting improvements */
-.form-group label {
+.form-group-hospital-management label {
   text-align: center;
   display: flex;
   align-items: center;
@@ -948,11 +949,11 @@ body.hospital-modal-open {
 }
 
 /* Form Visual Enhancements */
-.form-group {
+.form-group-hospital-management {
   position: relative;
 }
 
-.form-group:focus-within label {
+.form-group-hospital-management:focus-within label {
   color: #2e7d32;
   transform: translateY(-1px);
   transition: all 0.3s ease;

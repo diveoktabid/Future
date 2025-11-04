@@ -99,13 +99,13 @@ const HospitalManagement = () => {
       {/* Add Hospital Modal */}
       {modals.showAdd && (
         <div className="modal-overlay-hospital" onClick={closeModals}>
-          <div className="modal-content modal-entering" onClick={(e) => e.stopPropagation()}>
+          <div className="modal-content-hospital-management modal-entering" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
               <h2>Tambah Rumah Sakit Baru</h2>
               <button className="close-btn" onClick={closeModals}>×</button>
             </div>
             <form onSubmit={handleAddHospital} className="hospital-form">
-              <div className="form-group">
+              <div className="form-group-hospital-management">
                 <label htmlFor="name" className="form-field-required">Nama Rumah Sakit</label>
                 <input
                   type="text"
@@ -116,7 +116,7 @@ const HospitalManagement = () => {
                   placeholder="Masukkan nama rumah sakit"
                 />
               </div>
-              <div className="form-group">
+              <div className="form-group-hospital-management">
                 <label htmlFor="address" className="form-field-required">Alamat</label>
                 <textarea
                   id="address"
@@ -128,7 +128,7 @@ const HospitalManagement = () => {
                 />
               </div>
               <div className="form-row">
-                <div className="form-group">
+                <div className="form-group-hospital-management">
                   <label htmlFor="phone" className="form-field-required">Telepon</label>
                   <input
                     type="tel"
@@ -139,7 +139,7 @@ const HospitalManagement = () => {
                     placeholder="Contoh: 021-123456"
                   />
                 </div>
-                <div className="form-group">
+                <div className="form-group-hospital-management">
                   <label htmlFor="email">Email</label>
                   <input
                     type="email"
@@ -151,7 +151,7 @@ const HospitalManagement = () => {
                   />
                 </div>
               </div>
-              <div className="form-group">
+              <div className="form-group-hospital-management">
                 <label htmlFor="description">Deskripsi</label>
                 <textarea
                   id="description"
@@ -178,13 +178,13 @@ const HospitalManagement = () => {
       {/* Edit Hospital Modal */}
       {modals.showEdit && (
         <div className="modal-overlay" onClick={closeModals}>
-          <div className="modal-content modal-entering" onClick={(e) => e.stopPropagation()}>
+          <div className="modal-content-hospital-management modal-entering" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
               <h2>Edit Rumah Sakit</h2>
               <button className="close-btn" onClick={closeModals}>×</button>
             </div>
             <form onSubmit={handleEditHospital} className="hospital-form">
-              <div className="form-group">
+              <div className="form-group-hospital-management">
                 <label htmlFor="edit-name" className="form-field-required">Nama Rumah Sakit</label>
                 <input
                   type="text"
@@ -195,7 +195,7 @@ const HospitalManagement = () => {
                   placeholder="Masukkan nama rumah sakit"
                 />
               </div>
-              <div className="form-group">
+              <div className="form-group-hospital-management">
                 <label htmlFor="edit-address" className="form-field-required">Alamat</label>
                 <textarea
                   id="edit-address"
@@ -207,7 +207,7 @@ const HospitalManagement = () => {
                 />
               </div>
               <div className="form-row">
-                <div className="form-group">
+                <div className="form-group-hospital-management">
                   <label htmlFor="edit-phone" className="form-field-required">Telepon</label>
                   <input
                     type="tel"
@@ -218,7 +218,7 @@ const HospitalManagement = () => {
                     placeholder="Contoh: 021-123456"
                   />
                 </div>
-                <div className="form-group">
+                <div className="form-group-hospital-management">
                   <label htmlFor="edit-email">Email</label>
                   <input
                     type="email"
@@ -230,7 +230,7 @@ const HospitalManagement = () => {
                   />
                 </div>
               </div>
-              <div className="form-group">
+              <div className="form-group-hospital-management">
                 <label htmlFor="edit-description">Deskripsi</label>
                 <textarea
                   id="edit-description"
@@ -257,7 +257,7 @@ const HospitalManagement = () => {
       {/* Delete Hospital Modal */}
       {modals.showDelete && (
         <div className="modal-overlay" onClick={closeModals}>
-          <div className="modal-content delete-modal modal-entering" onClick={(e) => e.stopPropagation()}>
+          <div className="modal-content-hospital-management delete-modal modal-entering" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
               <h2>Konfirmasi Hapus</h2>
               <button className="close-btn" onClick={closeModals}>×</button>
@@ -291,7 +291,7 @@ const HospitalManagement = () => {
       {/* Edit Confirmation Modal */}
       {modals.showEditConfirm && (
         <div className="modal-overlay" onClick={() => closeModals()}>
-          <div className="modal-content modal-entering" onClick={(e) => e.stopPropagation()}>
+          <div className="modal-content-hospital-management modal-entering" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
               <h2>Konfirmasi Perubahan</h2>
               <button className="close-btn" onClick={() => closeModals()}>×</button>
