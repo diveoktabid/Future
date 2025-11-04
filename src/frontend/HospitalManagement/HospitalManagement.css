@@ -1,6 +1,13 @@
 /* HospitalManagement.css */
 @import '../styles/theme.css';
 
+/* Prevent body scroll when modal is open */
+body.hospital-modal-open {
+  overflow: hidden !important;
+  position: fixed !important;
+  width: 100% !important;
+}
+
 /* Animation keyframes */
 @keyframes fadeInUp {
   from {
@@ -287,22 +294,26 @@
 }
 
 /* Modal */
-.modal-overlay-hospital,
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(45, 90, 45, 0.85);
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 9999;
+.hospital-management .modal-overlay-hospital,
+.hospital-management .modal-overlay {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  background: rgba(0, 0, 0, 0.6) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  z-index: 10000 !important;
   padding: 1rem;
-  backdrop-filter: blur(4px);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   animation: fadeIn 0.3s ease-out;
+  margin: 0 !important;
+  overflow: auto;
 }
 
 @keyframes fadeIn {
@@ -310,19 +321,23 @@
   to { opacity: 1; }
 }
 
-.modal-content {
-  background: #ffffff;
+.hospital-management .modal-content {
+  position: relative !important;
+  background: #ffffff !important;
   border-radius: 16px;
-  width: 100%;
-  max-width: 900px;
-  max-height: 80vh;
+  width: 90%;
+  max-width: 650px;
+  max-height: 85vh;
   border: none;
   box-shadow: 
     0 25px 50px rgba(45, 90, 45, 0.3),
     0 0 0 1px rgba(168, 216, 168, 0.3);
   animation: slideIn 0.3s ease-out;
-  min-width: 600px;
-  margin: auto;
+  min-width: auto;
+  margin: 0 auto !important;
+  z-index: 10001 !important;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 @keyframes slideIn {
@@ -336,21 +351,22 @@
   }
 }
 
-.modal-header {
+.hospital-management .modal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1.5rem 2rem 1rem 2rem;
+  padding: 1.5rem 2rem 1.25rem 2rem;
   border-bottom: 2px solid #f0f8f0;
   background: linear-gradient(135deg, #f8fff8 0%, #ffffff 100%);
   border-radius: 16px 16px 0 0;
   position: relative;
+  z-index: 1;
 }
 
-.modal-header h2 {
+.hospital-management .modal-header h2 {
   color: #2d5a2d;
   margin: 0;
-  font-size: 1.75rem;
+  font-size: 1.5rem;
   font-weight: 700;
   text-align: center;
   width: 100%;
@@ -359,7 +375,7 @@
   position: relative;
 }
 
-.close-btn {
+.hospital-management .close-btn {
   position: absolute;
   top: 1rem;
   right: 1rem;
@@ -379,38 +395,32 @@
   font-weight: bold;
 }
 
-.close-btn:hover {
+.hospital-management .close-btn:hover {
   background: rgba(244, 67, 54, 0.2);
   color: #f44336;
   transform: scale(1.1);
 }
 
 /* Form */
-.hospital-form {
+.hospital-management .hospital-form {
   padding: 1.5rem 2rem 1.5rem 2rem;
   background: linear-gradient(135deg, #ffffff 0%, #fafffe 100%);
   border-radius: 0 0 16px 16px;
+  position: relative;
+  z-index: 1;
 }
 
 .form-group {
-  margin-bottom: 1rem;
+  margin-bottom: 1.25rem;
   position: relative;
 }
 
 .form-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1.5rem;
+  gap: 1.25rem;
   align-items: start;
   margin-bottom: 0.75rem;
-}
-
-/* Tambah class untuk row dengan 3 kolom */
-.form-row-triple {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 1.5rem;
-  align-items: start;
 }
 
 .form-group label {
@@ -418,12 +428,11 @@
   margin-bottom: 0.5rem;
   color: #2d5a2d;
   font-weight: 700;
-  font-size: 1.1rem;
+  font-size: 0.9rem;
   letter-spacing: 0.02em;
   line-height: 1.4;
   text-align: left;
   text-transform: uppercase;
-  font-size: 0.9rem;
   background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
   background-clip: text;
   -webkit-background-clip: text;
@@ -436,12 +445,12 @@
 .form-group input,
 .form-group textarea {
   width: 100%;
-  padding: 0.75rem 1rem;
+  padding: 0.875rem 1rem;
   border: 2px solid #e8f4e8;
   border-radius: 12px;
   background: linear-gradient(135deg, #ffffff 0%, #fafffe 100%);
   color: #2d3436;
-  font-size: 1rem;
+  font-size: 0.95rem;
   line-height: 1.5;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   box-sizing: border-box;
@@ -485,9 +494,9 @@
 
 .form-group textarea {
   resize: vertical;
-  min-height: 80px;
+  min-height: 90px;
   line-height: 1.6;
-  padding: 0.75rem 1rem;
+  padding: 0.875rem 1rem;
   text-align: left;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
@@ -603,19 +612,21 @@
 }
 
 /* Delete Modal */
-.delete-modal {
-  max-width: 480px;
-  margin: auto;
+.hospital-management .delete-modal {
+  max-width: 520px;
+  margin: 0 auto;
 }
 
-.delete-content {
-  padding: 1.5rem 1rem;
+.hospital-management .delete-content {
+  padding: 2rem 1.5rem;
   text-align: center;
   background: linear-gradient(135deg, #fff8f8 0%, #ffebee 100%);
   border-radius: 0 0 16px 16px;
+  position: relative;
+  z-index: 1;
 }
 
-.warning-icon {
+.hospital-management .warning-icon {
   font-size: 3.5rem;
   margin-bottom: 1rem;
   animation: pulse 2s infinite;
@@ -627,7 +638,7 @@
   50% { transform: scale(1.05); }
 }
 
-.delete-content p {
+.hospital-management .delete-content p {
   color: #2d5a2d;
   margin-bottom: 1rem;
   font-size: 1.1rem;
@@ -635,12 +646,12 @@
   font-weight: 500;
 }
 
-.delete-content p strong {
+.hospital-management .delete-content p strong {
   color: #d32f2f;
   font-weight: 700;
 }
 
-.warning-text {
+.hospital-management .warning-text {
   color: #dc2626;
   font-size: 0.95rem;
   font-weight: 500;
@@ -688,35 +699,30 @@
     gap: 1rem;
   }
 
-  .modal-content {
-    margin: 0.5rem;
-    max-height: 85vh;
+  .hospital-management .modal-content {
+    margin: 0.5rem auto;
+    max-height: 90vh;
     border-radius: 12px;
     max-width: 95%;
+    width: 95%;
     min-width: auto;
   }
 
-  .hospital-form {
-    padding: 1.5rem 1.25rem 1.5rem 1.25rem;
+  .hospital-management .hospital-form {
+    padding: 1.5rem 1.5rem 1.5rem 1.5rem;
   }
 
-  .modal-header {
-    padding: 1.5rem 1.25rem 1rem 1.25rem;
+  .hospital-management .modal-header {
+    padding: 1.5rem 1.5rem 1.25rem 1.5rem;
   }
 
-  .modal-header h2 {
-    font-size: 1.5rem;
+  .hospital-management .modal-header h2 {
+    font-size: 1.35rem;
   }
 
   .form-row {
     grid-template-columns: 1fr;
-    gap: 2rem;
-    margin-bottom: 1rem;
-  }
-
-  .form-section {
-    padding: 1.5rem;
-    margin-bottom: 2rem;
+    gap: 1rem;
   }
 
   .form-group {
@@ -775,16 +781,16 @@
     font-size: 1.4rem;
   }
 
-  .modal-header {
-    padding: 1rem 1.2rem 0.5rem 1.2rem;
+  .hospital-management .modal-header {
+    padding: 1.25rem 1.5rem 1rem 1.5rem;
   }
 
-  .modal-header h2 {
-    font-size: 1.2rem;
+  .hospital-management .modal-header h2 {
+    font-size: 1.25rem;
   }
 
-  .hospital-form {
-    padding: 1rem 1.2rem 1.2rem 1.2rem;
+  .hospital-management .hospital-form {
+    padding: 1.25rem 1.5rem 1.25rem 1.5rem;
   }
 
   .hospitals-table th,
@@ -802,7 +808,7 @@
     gap: 0.75rem;
   }
 
-  .close-btn {
+  .hospital-management .close-btn {
     top: 1rem;
     right: 1rem;
     width: 36px;
@@ -811,19 +817,19 @@
     display: none; /* Keep hidden on mobile too */
   }
 
-  .form-group {
+  .hospital-management .form-group {
     margin-bottom: 0.875rem;
   }
 
-  .form-group input,
-  .form-group textarea {
-    padding: 0.7rem;
+  .hospital-management .form-group input,
+  .hospital-management .form-group textarea {
+    padding: 0.8rem 0.9rem;
     font-size: 0.9rem;
   }
 
-  .form-group label {
+  .hospital-management .form-group label {
     font-size: 0.85rem;
-    margin-bottom: 0.3rem;
+    margin-bottom: 0.35rem;
   }
 }
 
@@ -892,7 +898,7 @@
 }
 
 /* Additional Utility Classes */
-.form-field-required::after {
+.hospital-management .form-field-required::after {
   content: ' *';
   color: #f44336;
   font-weight: bold;
@@ -901,7 +907,7 @@
   text-shadow: 0 1px 2px rgba(244, 67, 54, 0.3);
 }
 
-.modal-content.modal-entering {
+.hospital-management .modal-content.modal-entering {
   animation: modalSlideIn 0.4s ease-out;
 }
 
@@ -970,78 +976,69 @@
 
 /* Responsive Design for Modal */
 @media (max-width: 768px) {
-  .modal-content {
-    margin: 0.5rem;
+  .hospital-management .modal-content {
+    margin: 0.5rem auto;
     max-height: 95vh;
     border-radius: 12px;
     max-width: 95%;
     min-width: auto;
   }
 
-  .hospital-form {
+  .hospital-management .hospital-form {
     padding: 2rem 1.5rem 2rem 1.5rem;
   }
 
-  .modal-header {
+  .hospital-management .modal-header {
     padding: 2rem 1.5rem 1.5rem 1.5rem;
   }
 
-  .modal-header h2 {
+  .hospital-management .modal-header h2 {
     font-size: 1.6rem;
   }
 
-  .form-row {
+  .hospital-management .form-row {
     grid-template-columns: 1fr;
-    gap: 2rem;
+    gap: 1rem;
   }
 
-  .form-row-triple {
-    grid-template-columns: 1fr;
-    gap: 2rem;
+  .hospital-management .form-group input,
+  .hospital-management .form-group textarea {
+    padding: 0.875rem 1rem;
+    font-size: 0.95rem;
   }
 
-  .form-group input,
-  .form-group textarea {
-    padding: 1rem 1.25rem;
-    font-size: 1rem;
+  .hospital-management .form-group label {
+    font-size: 0.9rem;
   }
 
-  .form-group label {
-    font-size: 1rem;
-  }
-
-  .form-actions {
+  .hospital-management .form-actions {
     margin-left: -1.5rem;
     margin-right: -1.5rem;
     padding-left: 1.5rem;
     padding-right: 1.5rem;
-    margin-bottom: -2rem;
-    padding-bottom: 2rem;
+    margin-bottom: -1.5rem;
+    padding-bottom: 1.5rem;
   }
 }
 
 @media (min-width: 1200px) {
-  .modal-content {
-    max-width: 1200px;
+  .hospital-management .modal-content {
+    max-width: 750px;
   }
   
-  .hospital-form {
-    padding: 3rem 5rem 3rem 5rem;
+  .hospital-management .hospital-form {
+    padding: 2rem 3rem 2rem 3rem;
   }
 
-  .modal-header {
-    padding: 3rem 5rem 2rem 5rem;
+  .hospital-management .modal-header {
+    padding: 2rem 3rem 1.5rem 3rem;
   }
 
-  .modal-header h2 {
-    font-size: 1.8rem;
+  .hospital-management .modal-header h2 {
+    font-size: 1.65rem;
   }
 
-  .form-row {
-    gap: 4rem;
-  }
-
-  .form-row-triple {
-    gap: 3rem;
+  .hospital-management .form-row {
+    gap: 2rem;
   }
 }
