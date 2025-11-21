@@ -540,6 +540,60 @@ body.hospital-modal-open {
     0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
+/* Date and Time Input Styling */
+.form-group-hospital-management input[type="date"],
+.form-group-hospital-management input[type="time"] {
+  cursor: pointer;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  position: relative;
+  color: #2d3436;
+  font-weight: 500;
+}
+
+.form-group-hospital-management input[type="date"]::-webkit-calendar-picker-indicator,
+.form-group-hospital-management input[type="time"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  opacity: 0.5;
+  transition: all 0.3s ease;
+  padding: 4px;
+  border-radius: 6px;
+  filter: grayscale(0.3);
+}
+
+.form-group-hospital-management input[type="date"]::-webkit-calendar-picker-indicator:hover,
+.form-group-hospital-management input[type="time"]::-webkit-calendar-picker-indicator:hover {
+  opacity: 0.8;
+  background: rgba(76, 175, 80, 0.08);
+  filter: grayscale(0);
+}
+
+.form-group-hospital-management input[type="date"]:focus::-webkit-calendar-picker-indicator,
+.form-group-hospital-management input[type="time"]:focus::-webkit-calendar-picker-indicator {
+  opacity: 1;
+  filter: grayscale(0);
+}
+
+/* Remove default date/time input styling differences */
+.form-group-hospital-management input[type="date"]::-webkit-datetime-edit-fields-wrapper,
+.form-group-hospital-management input[type="time"]::-webkit-datetime-edit-fields-wrapper {
+  padding: 0;
+}
+
+.form-group-hospital-management input[type="date"]::-webkit-datetime-edit-text,
+.form-group-hospital-management input[type="time"]::-webkit-datetime-edit-text {
+  color: #90a4ae;
+  padding: 0 0.2em;
+}
+
+.form-group-hospital-management input[type="date"]::-webkit-datetime-edit-month-field,
+.form-group-hospital-management input[type="date"]::-webkit-datetime-edit-day-field,
+.form-group-hospital-management input[type="date"]::-webkit-datetime-edit-year-field,
+.form-group-hospital-management input[type="time"]::-webkit-datetime-edit-hour-field,
+.form-group-hospital-management input[type="time"]::-webkit-datetime-edit-minute-field {
+  color: #2d3436;
+  font-weight: 500;
+}
+
 .form-actions {
   display: flex;
   gap: 1rem;

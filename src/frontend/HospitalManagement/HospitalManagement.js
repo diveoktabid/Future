@@ -151,6 +151,29 @@ const HospitalManagement = () => {
                   />
                 </div>
               </div>
+              <div className="form-row">
+                <div className="form-group-hospital-management">
+                  <label htmlFor="installation_date">Tanggal Instalasi</label>
+                  <input
+                    type="date"
+                    id="installation_date"
+                    name="installation_date"
+                    value={formData.installation_date}
+                    onChange={handleInputChange}
+                  />
+                </div>
+                <div className="form-group-hospital-management">
+                  <label htmlFor="installation_time">Waktu Instalasi</label>
+                  <input
+                    type="time"
+                    id="installation_time"
+                    name="installation_time"
+                    value={formData.installation_time}
+                    onChange={handleInputChange}
+                    placeholder="HH:MM"
+                  />
+                </div>
+              </div>
               <div className="form-group-hospital-management">
                 <label htmlFor="description">Deskripsi</label>
                 <textarea
@@ -227,6 +250,29 @@ const HospitalManagement = () => {
                     value={formData.email}
                     onChange={handleInputChange}
                     placeholder="email@rumahsakit.com"
+                  />
+                </div>
+              </div>
+              <div className="form-row">
+                <div className="form-group-hospital-management">
+                  <label htmlFor="edit-installation_date">Tanggal Instalasi</label>
+                  <input
+                    type="date"
+                    id="edit-installation_date"
+                    name="installation_date"
+                    value={formData.installation_date}
+                    onChange={handleInputChange}
+                  />
+                </div>
+                <div className="form-group-hospital-management">
+                  <label htmlFor="edit-installation_time">Waktu Instalasi</label>
+                  <input
+                    type="time"
+                    id="edit-installation_time"
+                    name="installation_time"
+                    value={formData.installation_time}
+                    onChange={handleInputChange}
+                    placeholder="HH:MM"
                   />
                 </div>
               </div>
