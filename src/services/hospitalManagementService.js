@@ -40,6 +40,8 @@ class HospitalManagementService {
         email: hospital.email || '',
         capacity: hospital.capacity || '',
         description: hospital.description || '',
+        installation_date: hospital.installation_date || '',
+        installation_time: hospital.installation_time || '',
         iot_status: hospital.iot_status,
         is_active: hospital.is_active,
         created_at: hospital.created_at,
@@ -52,6 +54,7 @@ class HospitalManagementService {
 
   // Create new hospital
   async createHospital(hospitalData) {
+    console.log('Service - Creating hospital with data:', hospitalData);
     return await this.apiCall(`${API_BASE_URL}/hospitals`, {
       method: 'POST',
       body: JSON.stringify(hospitalData)
@@ -60,6 +63,14 @@ class HospitalManagementService {
 
   // Update hospital
   async updateHospital(id, hospitalData) {
+    console.log('=== SERVICE LAYER UPDATE ===');
+    console.log('Hospital ID:', id);
+    console.log('Data received:', hospitalData);
+    console.log('Data stringified:', JSON.stringify(hospitalData));
+    console.log('installation_date:', hospitalData.installation_date);
+    console.log('installation_time:', hospitalData.installation_time);
+    console.log('==========================');
+    
     return await this.apiCall(`${API_BASE_URL}/hospitals/${id}`, {
       method: 'PUT',
       body: JSON.stringify(hospitalData)

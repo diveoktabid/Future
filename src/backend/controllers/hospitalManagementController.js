@@ -88,7 +88,17 @@ const getHospitalsForManagement = async (req, res) => {
 // Create Hospital for Management Interface
 const createHospitalFromManagement = async (req, res) => {
   try {
-    const { name, address, phone, email, description } = req.body;
+    const { name, address, phone, email, description, installation_date, installation_time } = req.body;
+
+    console.log('Create Hospital - Received data:', { 
+      name, 
+      address, 
+      phone, 
+      email, 
+      description, 
+      installation_date, 
+      installation_time 
+    }); // Debug log
 
     // Validation
     if (!name || !address || !phone) {
@@ -119,20 +129,29 @@ const createHospitalFromManagement = async (req, res) => {
         phone, 
         email, 
         description,
+        installation_date,
+        installation_time,
         iot_status,
         is_active,
         created_at,
         updated_at
-      ) VALUES (?, ?, ?, ?, ?, 'Mati', 1, NOW(), NOW())
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, 'Mati', 1, NOW(), NOW())
     `;
 
-    const result = await executeQuery(insertQuery, [
+    // Prepare parameters - convert empty strings to null
+    const params = [
       name,
       address,
       phone,
-      email || null,
-      description || null
-    ]);
+      email && email.trim() !== '' ? email : null,
+      description && description.trim() !== '' ? description : null,
+      installation_date && installation_date.trim() !== '' ? installation_date : null,
+      installation_time && installation_time.trim() !== '' ? installation_time : null
+    ];
+
+    console.log('Insert params:', params); // Debug log
+
+    const result = await executeQuery(insertQuery, params);
 
     if (result.affectedRows === 1) {
       // Get the created hospital
@@ -166,7 +185,14 @@ const createHospitalFromManagement = async (req, res) => {
 const updateHospitalFromManagement = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, address, phone, email, description } = req.body;
+    const { name, address, phone, email, description, installation_date, installation_time } = req.body;
+
+    console.log('=== UPDATE HOSPITAL DEBUG ===');
+    console.log('Hospital ID:', id);
+    console.log('Received req.body:', JSON.stringify(req.body, null, 2));
+    console.log('installation_date type:', typeof installation_date, 'value:', installation_date);
+    console.log('installation_time type:', typeof installation_time, 'value:', installation_time);
+    console.log('===========================');
 
     // Validation
     if (!name || !address || !phone) {
@@ -211,18 +237,33 @@ const updateHospitalFromManagement = async (req, res) => {
         phone = ?,
         email = ?,
         description = ?,
+        installation_date = ?,
+        installation_time = ?,
         updated_at = NOW()
       WHERE hospital_id = ? AND is_active = 1
     `;
 
-    const result = await executeQuery(updateQuery, [
+    // Prepare parameters - handle empty strings properly
+    const params = [
       name,
       address,
       phone,
-      email || null,
-      description || null,
+      email && typeof email === 'string' && email.trim() !== '' ? email : null,
+      description && typeof description === 'string' && description.trim() !== '' ? description : null,
+      installation_date && typeof installation_date === 'string' && installation_date.trim() !== '' ? installation_date : null,
+      installation_time && typeof installation_time === 'string' && installation_time.trim() !== '' ? installation_time : null,
       id
-    ]);
+    ];
+
+    console.log('=== UPDATE PARAMS ===');
+    console.log('Params to DB:', JSON.stringify(params, null, 2));
+    console.log('Params[5] (installation_date):', params[5]);
+    console.log('Params[6] (installation_time):', params[6]);
+    console.log('====================');
+
+    const result = await executeQuery(updateQuery, params);
+
+    console.log('Update result:', result); // Debug log
 
     if (result.affectedRows === 1) {
       // Get updated hospital
@@ -231,11 +272,28 @@ const updateHospitalFromManagement = async (req, res) => {
         [id]
       );
 
+      console.log('Updated hospital data from DB:', updatedHospital[0]); // Debug log
+
       res.json({
         status: "success",
         message: "Rumah sakit berhasil diperbarui",
         data: {
           hospital: updatedHospital[0]
+        }
+      });
+    } else if (result.affectedRows === 0) {
+      console.log('No rows affected - data might be the same'); // Debug log
+      // Still return success if hospital exists but data unchanged
+      const currentHospital = await executeQuery(
+        "SELECT * FROM hospital WHERE hospital_id = ?",
+        [id]
+      );
+      
+      res.json({
+        status: "success",
+        message: "Data rumah sakit sudah up to date",
+        data: {
+          hospital: currentHospital[0]
         }
       });
     } else {

@@ -29,9 +29,9 @@ const handleResponse = async (response) => {
 // Hospital service functions
 export const hospitalService = {
   // Get all hospitals
-  getAllHospitals: async () => {
+  getAllHospitals: async (limit = 100) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/hospitals`, {
+      const response = await fetch(`${API_BASE_URL}/hospitals?limit=${limit}`, {
         method: "GET",
         headers: createHeaders(),
       });
